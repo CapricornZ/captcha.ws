@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Hibernate-mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="demo.chapta.model.Client" table="Clients"> 
+        <id name="ip" type="java.lang.String" length="15">
+            <column name="IP"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="updateTime" type="java.sql.Timestamp" column="updateTime"/>
+        <many-to-one name="config" class="demo.chapta.model.Config" lazy="false" column="config_id"/>
+    </class>
+</hibernate-mapping>

@@ -40,8 +40,7 @@
 	</bean> 
     
     <bean class="demo.chapta.controller.DemoController">
-    	<!-- <property name="captchaConfig" ref="captchaConfig"/> -->
-    	<property name="captchaConfig" ref="captchaConfigMoni"/>
+    	<property name="captchaConfig" ref="captchaConfig"/>
     	<property name="priceConfig" ref="priceConfig"/>
     </bean>    
 

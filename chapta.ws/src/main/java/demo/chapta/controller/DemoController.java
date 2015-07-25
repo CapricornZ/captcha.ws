@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class DemoController {
 	private Config priceConfig;
 	public void setPriceConfig(Config config){ this.priceConfig = config; }
 	
-	@RequestMapping(value = "/activeCaptcha.do")
+	@RequestMapping(value = "/captcha/red.do")
 	@ResponseBody
 	public String acceptActiveCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
 
@@ -60,11 +61,16 @@ public class DemoController {
 		logger.debug("start process ActiveCaptcha : binary stream");
 		StringBuilder sbActive = new StringBuilder();
 		try {
-			
+
+			String strDir = this.captchaConfig.getTmpPath() + "/" + new Date().getTime();
+			File dir = new File(strDir);
+			dir.mkdir();
+
 			ImageTool it = new ImageTool();
 			it.setImage(it.getBufferedImage(file.getInputStream()));
-			it.saveToFile(this.captchaConfig.getTmpPath() + "/captchaBefore.jpg");
+			it.saveToFile(strDir + "/before.jpg");
 	        it = it.midddleValueFilter(20, true).holdRed();//中值过滤//保留红色和白色背景
+	        it.saveToFile(strDir + "/after.jpg");
 	        
 	        List<Element> list = new ArrayList<Element>();
 	        BufferedImage img = it.getImage();
@@ -77,9 +83,8 @@ public class DemoController {
 	        	int redPercent = itx.getActivePercent();
 	        	
 	        	itx = itx.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, captchaConfig.getMinNearSpots());//灰度处理//黑白//去噪
-	        	ImageIO.write(subImg, "JPG", new File(String.format(this.captchaConfig.getTmpPath() + "/captcha-item-%d.jpg", i)));
+	        	//ImageIO.write(subImg, "JPG", new File(String.format(this.captchaConfig.getTmpPath() + "/captcha-item-%d.jpg", i)));
 	            String s = getSingleCharOcr(subImg, captchaConfig.getDict());
-	            //sbTotal.append(s);
 	            
 	            list.add(new Element(i, redPercent, s));
 	        }
@@ -111,6 +116,54 @@ public class DemoController {
 		return sbActive.toString();
 	}
 	
+	@RequestMapping(value = "/captcha/detail.do")
+	@ResponseBody
+	public String[] detailCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
+		
+		List<String> rtn = new ArrayList<String>();
+		long start = new java.util.Date().getTime();
+		logger.debug("start process Captcha : binary stream");
+		StringBuilder sb = new StringBuilder();
+		try{
+			
+			String strDir = this.captchaConfig.getTmpPath();
+			File dir = new File(strDir);
+			
+			ImageTool it = new ImageTool();
+	    	BufferedImage bi = it.getBufferedImage(file.getInputStream());
+	    	it.setImage(bi);
+	    	it.saveToFile(strDir + "/captchaBefore.jpg");
+	        it = it.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, this.captchaConfig.getMinNearSpots());//灰度处理,黑白,去噪
+	        it.saveToFile(strDir + "/captchaAfter.jpg");
+	        
+	        BufferedImage img = it.getImage();
+	        for(int i=0; i<captchaConfig.getOffsetX().length; i++){
+	        	
+	        	BufferedImage item = img.getSubimage(captchaConfig.getOffsetX()[i], captchaConfig.getOffsetY(),
+	        			captchaConfig.getWidth(), captchaConfig.getHeight());
+	        	java.io.ByteArrayOutputStream arrayOS = new java.io.ByteArrayOutputStream();
+	        	ImageIO.write(item, "JPG", arrayOS);
+	        	rtn.add(new String(org.apache.commons.codec.binary.Base64.encodeBase64(arrayOS.toByteArray())));
+	        	ImageIO.write(item, "JPG", new File(String.format(strDir + "/item-%d.jpg", i)));
+	            String s = getSingleCharOcr(item, captchaConfig.getDict());
+	            sb.append(s);
+	        }
+			
+		} catch (IOException ex){
+			
+			ex.printStackTrace();
+			return (String[])rtn.toArray();
+		}
+		
+		long end = new java.util.Date().getTime();
+		logger.info("CAPTCHA:[{}]", sb.toString());
+		logger.debug("end process Captcha : cost {}ms", end-start);
+		String[] result;
+		rtn.add(sb.toString());
+		result = rtn.toArray(new String[0]); 
+		return result;
+	}
+	
 	@RequestMapping(value = "/captcha.do")
 	@ResponseBody
 	public String acceptCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
@@ -119,26 +172,26 @@ public class DemoController {
 		logger.debug("start process Captcha : binary stream");
 		StringBuilder sb = new StringBuilder();
 		try{
+			String strDir = this.captchaConfig.getTmpPath() + "/" + new Date().getTime();
+			File dir = new File(strDir);
+			dir.mkdir();
 			
 			ImageTool it = new ImageTool();
 	    	BufferedImage bi = it.getBufferedImage(file.getInputStream());
 	    	it.setImage(bi);
-	    	it.saveToFile(this.captchaConfig.getTmpPath() + "/captchaBefore.jpg");
-	        it = it.changeToGrayImage();//灰度处理
-	        it = it.changeToBlackWhiteImage();//黑白
-	        it = it.removeBadBlock(1, 1, captchaConfig.getMinNearSpots());//去噪
-	        it.saveToFile(this.captchaConfig.getTmpPath() + "/captchaAfter.jpg");
+	    	it.saveToFile(strDir + "/captchaBefore.jpg");
+	        it = it.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, captchaConfig.getMinNearSpots());//灰度处理,黑白,去噪
+	        it.saveToFile(strDir + "/captchaAfter.jpg");
 	        
 	        BufferedImage img = it.getImage();
 	        for(int i=0; i<captchaConfig.getOffsetX().length; i++){
 	        	
 	        	BufferedImage item = img.getSubimage(captchaConfig.getOffsetX()[i], captchaConfig.getOffsetY(),
 	        			captchaConfig.getWidth(), captchaConfig.getHeight());
-	        	ImageIO.write(item, "JPG", new File(String.format(this.captchaConfig.getTmpPath() + "/captcha-item-%d.jpg", i)));
+	        	//ImageIO.write(item, "JPG", new File(String.format(this.captchaConfig.getTmpPath() + "/captcha-item-%d.jpg", i)));
 	            String s = getSingleCharOcr(item, captchaConfig.getDict());
 	            sb.append(s);
 	        }
-	        //System.out.println("Captcha : " + sb.toString());
 			
 		} catch (IOException ex){
 			
@@ -147,10 +200,8 @@ public class DemoController {
 		}
 		
 		long end = new java.util.Date().getTime();
-		
-		long cost = end-start;
 		logger.info("CAPTCHA:[{}]", sb.toString());
-		logger.debug("end process Captcha : cost {}ms", cost);
+		logger.debug("end process Captcha : cost {}ms", end-start);
 		return sb.toString();
 	}
 	

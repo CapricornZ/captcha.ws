@@ -1,0 +1,94 @@
+#set( $ContextPath = ${request.contextPath} )
+
+<link rel="stylesheet" href="${ContextPath}/css/bootstrap.css" >
+<link rel="stylesheet" type="text/css" href="${ContextPath}/css/jquery.datetimepicker.css"/>
+
+<script type="text/javascript" src="${ContextPath}/js/jquery/jquery-1.11.2.min.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+	
+		$.get("../client/list.do", function(result){
+			for(var i=0; i<result.length; i++){
+				var option = $("<option>").val(result[i].ip).text(result[i].ip);
+				$('#client').append(option);
+			}
+  		});
+  		
+  		$("#OK").click(function(){
+  			
+  			var endPoint = "${ContextPath}/command/config/new.do?client=" + $("#client").val();
+  			var reqParam = {
+  				no:$("#noInput").val(),
+  				passwd:$("#passwdInput").val(),
+  				pid:$("#pidInput").val(),
+  				pname:$("#puserInput").val()
+  			};
+  			$.ajax({
+  				url:endPoint,
+  				type:'POST',
+  				cache:false,
+				data:JSON.stringify(reqParam),
+				contentType: 'application/json; charset=utf-8',
+				success: function(json) {
+					alert("SUCCESS");
+					console.log(" reponse :"+ json);
+                }
+  			});
+  		});
+	});
+</script>
+
+<form class="form-horizontal" onsubmit="return false;">
+	<fieldset>
+		<legend>创建配置</legend>
+		<div class="control-group">
+			<label class="control-label" for="noInput">投标号</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">#</span>
+					<input id="noInput" class="input-xlarge" style="width:200px;height:30px;" type="text"  placeholder="投标号"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="passwdInput">密码</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">@</span>
+					<input id="passwdInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="标书密码"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="pidInput">身份证</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">#</span>
+					<input id="pidInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="身份证号码"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="puserInput">姓名</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">@</span>
+					<input id="puserInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="用户姓名"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="client">CLIENTs</label>
+			<div class="controls">
+				<select id="client">
+					<option value="">空</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" id="OK">确定</button>
+			<button class="btn">取消</button>
+		</div>
+	</fieldset>
+</form>

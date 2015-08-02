@@ -1,32 +1,17 @@
-package demo.chapta.service;
+package demo.chapta.service.impl;
 
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 import demo.chapta.model.Client;
+import demo.chapta.service.IClientService;
+import demo.chapta.service.Service;
 
-public class ClientService implements IClient {
-	
-	@Resource(name="sessionFactory")
-    private SessionFactory sessionFactory;
-	
-    public void setSessionFactory(SessionFactory sessionFactory) {
-    	
-        this.sessionFactory = sessionFactory;
-    }
+public class ClientService extends Service implements IClientService {
     
-    protected Session getSession() {
-    	
-        return sessionFactory.getCurrentSession();
-    }
-    
-    public Client save(Client client){
+    public Client saveOrUpdate(Client client){
     	
     	String hql = "from Client where ip=:ip";
     	Query query = this.getSession().createQuery(hql);
@@ -41,6 +26,7 @@ public class ClientService implements IClient {
     		this.getSession().update(tmpClient);
     		return tmpClient;
     	} else {
+    		client.setUpdateTime(new Date());
     		this.getSession().saveOrUpdate(client);
     		return client;
     	}
@@ -70,5 +56,27 @@ public class ClientService implements IClient {
     	List<Client> list = query.list();
     	return list.size()>0 ? list.get(0) : null;
     }
+
+	@Override
+	public List<Client> list() {
+		
+		String hql = "from Client";
+    	Query query = this.getSession().createQuery(hql);
+    	
+    	@SuppressWarnings("unchecked")
+    	List<Client> list = query.list();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Client> listByIPs(String[] hosts) {
+
+		String hql = "from Client where ip in (:ips)";
+    	Query query = this.getSession().createQuery(hql);
+    	query.setParameterList("ips", hosts);
+
+    	return query.list();
+	}
 
 }

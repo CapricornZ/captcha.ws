@@ -1,4 +1,4 @@
-package demo.chapta.controller;
+package demo.chapta.util;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -15,7 +15,7 @@ public class CustomDateDeserializer extends JsonDeserializer<Date> {
     public Date deserialize(JsonParser jp, DeserializationContext ctxt)  
             throws IOException, JsonProcessingException {
     	
-    	SimpleDateFormat formatter = new SimpleDateFormat ("yyyy.MM.dd HH:mm:ss"); 
+    	SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss"); 
     	try {
 			return formatter.parse(jp.getText());
 		} catch (ParseException e) {

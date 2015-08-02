@@ -11,8 +11,18 @@
         http://www.springframework.org/schema/mvc
 		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 		
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  		<property name="locations" value="classpath:app.properties"/> 
+	</bean>
 	<!-- Enables the Spring MVC @Controller programming model -->  
     <mvc:annotation-driven />
+   	<mvc:interceptors>  
+        <!-- 使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求 -->  
+        <bean class="demo.chapta.controller.SecurityInterceptor">
+        	<property name="certificatePath" value="${security.CERT}"/>
+        	<property name="licencePath" value="${security.LICENCE}"/>
+        </bean>
+    </mvc:interceptors>  
     
     <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->  
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" lazy-init="false" />  
@@ -46,6 +56,20 @@
 
 	<bean class="demo.chapta.controller.CommandController">
 		<property name="clientService" ref="clientService"/>
+	</bean>
+	
+	<bean class="demo.chapta.controller.ClientController">
+		<property name="clientService" ref="clientService"/>
+	</bean>
+	<bean class="demo.chapta.controller.OperationController">
+		<property name="clientService" ref="clientService"/>
+		<property name="operationService" ref="operationService"/>
+		<property name="screenConfigService" ref="screenConfigService"/>
+	</bean>
+	
+	<bean class="demo.chapta.controller.ConfigController">
+		<property name="clientService" ref="clientService"/>
+		<property name="configService" ref="configService"/>
 	</bean>
     
     <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">

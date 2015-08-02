@@ -1,0 +1,104 @@
+#set( $ContextPath = ${request.contextPath} )
+
+<script type="text/javascript" src="${ContextPath}/js/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="${ContextPath}/js/jquery/jquery.maskedinput.js"></script>
+<script type="text/javascript">
+	$(function(){
+
+		$("#startTimeInput").mask("9999-99-99 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
+		$("#expireTimeInput").mask("9999-99-99 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
+		
+		$("#MODIFY").click(function(){
+			var bidOps = {
+				id:$('#operationID').val(),
+				type:"BID",
+				startTime:$('#startTimeInput').val(),
+				expireTime:$('#expireTimeInput').val(),
+				price:$('#price').val(),
+				content:$('#jsonContent').val()
+			};
+			
+			$.ajax({
+			    url: '${ContextPath}/command/operation/BID/' + $('#operationID').val() + '.do',
+    			type: 'PUT',
+    			data:JSON.stringify(bidOps),
+				contentType: 'application/json;charset=utf-8;',
+				dataType: 'json',
+    			success: function(result) {
+    				alert('succ');
+			    }
+			});
+		});
+	});
+</script>
+
+<form class="form-horizontal" onsubmit="return false;">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="operationID">OperationID</label>
+			<div class="controls">
+				<input id="operationID" class="input-mini uneditable-input" style="height:30px;" type="text" value="${operation.id}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="startTimeInput">触发时间</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">@</span>
+					<input id="startTimeInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="startTime" value="${operation.startTime}"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="expireTimeInput">有效时间</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">@</span>
+					<input id="expireTimeInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="startTime"  value="${operation.expireTime}"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="price">加价选择</label>
+			<div class="controls">
+				<select id="price">
+					<option value="100" #if(${operation.price}==100)SELECTED#end>+100</option>
+					<option value="200" #if(${operation.price}==200)SELECTED#end>+200</option>
+					<option value="300" #if(${operation.price}==300)SELECTED#end>+300</option>
+					<option value="400" #if(${operation.price}==400)SELECTED#end>+400</option>
+					<option value="500" #if(${operation.price}==500)SELECTED#end>+500</option>
+					<option value="600" #if(${operation.price}==600)SELECTED#end>+600</option>
+				</select>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="jsonContent">jsonContent</label>
+			<div class="controls">
+				<textarea class="form-control" rows="8" style="width:300px;" id="jsonContent">${operation.content}</textarea>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="jsonContent">分配の客户端</label>
+			<div class="controls">
+				<table id="clients" class="table table-striped .table-bordered">
+					<tr>
+						<th>HOST/IP</th>
+						<th>更新时间</th>
+					</tr>
+					#foreach(${client} in ${operation.clients})
+					<tr>
+						<td>${client.ip}</td>
+						<td>${client.updateTime}</td>
+					</tr>
+					#end
+				</table>
+			</div>
+		</div>
+		<!--
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" id="MODIFY">保存修改</button>
+			<button class="btn">取消</button>
+		</div>
+		-->
+	</fieldset>
+</form>

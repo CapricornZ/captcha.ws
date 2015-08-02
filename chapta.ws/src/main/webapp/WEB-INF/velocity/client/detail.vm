@@ -1,0 +1,70 @@
+<form class="form-horizontal" onsubmit="return false;">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="HOST">HOST/IP</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">#</span>
+					<input id="HOST" class="input-xlarge uneditable-input" disabled style="width:210px;height:30px;" type="text" placeholder="startTime" value="${client.ip}"></input>
+				</div>
+			</div>
+		</div>
+		<!--CONFIG-->
+		#if (${client.config})
+		<div class="control-group">
+			<label class="control-label" for="CONFIG-NO">投标号</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">#</span>
+					<input id="CONFIG-NO" class="input-xlarge" style="width:210px;height:30px;" type="text" placeholder="startTime" value="${client.config.no}"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="CONFIG-PASS">密码</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">#</span>
+					<input id="CONFIG-PASS" class="input-xlarge" style="width:210px;height:30px;" type="text" placeholder="startTime" value="${client.config.passwd}"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="CONFIG-PID">身份证</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">#</span>
+					<input id="CONFIG-PID" class="input-xlarge" style="width:210px;height:30px;" type="text" placeholder="startTime" value="${client.config.pid}"></input>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="CONFIG-PNAME">姓名</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">#</span>
+					<input id="CONFIG-PNAME" class="input-xlarge" style="width:210px;height:30px;" type="text" placeholder="startTime" value="${client.config.pname}"></input>
+				</div>
+			</div>
+		</div>
+		#end
+		<!--CONFIG-->
+		#foreach(${operation} in ${client.operation})
+		<div class="control-group">
+			<label class="control-label" for="startTimeInput">操作-${operation.id}</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">${operation.type}</span>
+					<input id="startTimeInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="startTime" value="${operation.tips}"></input>
+				</div>
+			</div>
+		</div>
+		#end
+		<!--
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" id="MODIFY">保存修改</button>
+			<button class="btn">取消</button>
+		</div>
+		-->
+	</fieldset>
+</form>

@@ -1,0 +1,120 @@
+#set( $ContextPath = ${request.contextPath} )
+
+<link rel="stylesheet" href="${ContextPath}/css/bootstrap.css" >
+<link href="${ContextPath}/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="${ContextPath}/js/jquery/jquery-1.11.2.min.js"></script>
+<script src="${ContextPath}/js/bootstrap.js"></script>
+<script src="${ContextPath}/js/bootstrap-dialog.min.js"></script>
+<script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ContextPath}/js/jquery/jquery.maskedinput.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		var date = new Date();
+		var yyyy = date.getFullYear();
+		var m = date.getMonth() + 1;
+		var mm = (m < 10) ? '0' + m : m;
+		var d = date.getDate();
+		var dd = (d < 10) ? '0' + d : d;
+		
+		var strNow = yyyy + '-' + mm + '-' + dd;
+		$("#startTimeInput").mask(strNow + " 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
+		$("#expireTimeInput").mask("9999-99-99 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
+	
+		$('#OK').click(function(){
+		
+			var screen = $("input[name='screen']:checked");
+			if(screen.length == 0){
+				alert("选择screen先");return;
+			}
+			
+			var startTime = $("#startTimeInput").val();
+			var expireTime = $("#expireTimeInput").val();
+			var price = $("#price").val();
+			var json = $('#' + $(screen[0]).val()).children().eq(2).html();
+			var bidParam = {
+				'price':price, 
+				'type' :'BID',
+				'startTime' :startTime,
+				'expireTime':expireTime,
+				'content'   :json
+			};
+			
+			$.ajax({
+				url : '${ContextPath}/command/operation/BID/accept.do',
+				type: 'POST',
+				data:JSON.stringify(bidParam),
+				contentType: 'application/json;charset=utf-8;',
+				success: function(json) {
+					alert("SUCCESS");
+                }
+			});
+		});
+	});
+</script>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span6"><!--Sidebar content-->
+			<table class="table table-striped table-bordered">
+				<tr>
+					<th style="width:50px;">ID</th>
+					<th>FROM HOST</th>
+					<th>SCREEN DETAIL</th>
+					<th>创建时间</th>
+				</tr>
+				#foreach(${screen} in ${screens})
+				<tr id="${screen.id}">
+					<td><input type="radio" name="screen" value="${screen.id}">${screen.id}</input></td>
+					<td>${screen.fromHost}</td>
+					<td>${screen.jsonContent}</td>
+					<td>${screen.createTime}</td>
+				</tr>
+				#end
+			</table>
+		</div>
+		<div class="span6"><!--Sidebar content-->
+			<div id="newOperationFrom" class="form-horizontal"><!--FORM-->
+				<fieldset>
+					<legend>选择SCREEN，创建操作</legend>
+					<div class="control-group">
+						<label class="control-label" for="startTimeInput">触发时间</label>
+						<div class="controls">
+							<div class="input-prepend">
+								<span class="add-on">@</span>
+								<input id="startTimeInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="startTime"></input>
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="expireTimeInput">有效时间</label>
+						<div class="controls">
+							<div class="input-prepend">
+							  	<span class="add-on">@</span>
+							  	<input id="expireTimeInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="expireTime"></input>
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="price">加价选择</label>
+						<div class="controls">
+							<select id="price">
+								<option value="100">+100</option>
+								<option value="200">+200</option>
+								<option value="300" SELECTED>+300</option>
+								<option value="400">+400</option>
+								<option value="500">+500</option>
+								<option value="600">+600</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-actions">
+						<button class="btn btn-primary" type="submit" id="OK">确定</button>
+						<button class="btn">取消</button>
+					</div>
+				</fieldset>
+			</div><!--FORM-->
+		</div>
+	</div>
+</div>

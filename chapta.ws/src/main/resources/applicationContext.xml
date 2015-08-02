@@ -24,14 +24,6 @@
     	<property name="offsetY" value="${captchaLogin.offsetY}"/>
     	<property name="offsetX">
     		<value>${captchaLogin.offsetX}</value>
-    		<!-- <array>
-    			<value>0</value>
-    			<value>17</value>
-    			<value>34</value>
-    			<value>51</value>
-    			<value>68</value>
-    			<value>85</value>
-    		</array> -->
     	</property>
     </bean>
     
@@ -58,41 +50,16 @@
     	</property>
     </bean>
     
-    <bean id="captchaConfigMoni" class="demo.chapta.Config">
-    	<property name="tmpPath" value="${tmpDirectory}"/>
-    	<property name="minNearSpots" value="2"/>
-    	<property name="width" value="15"/>
-    	<property name="height" value="20"/>
-    	<property name="offsetY" value="3"/>
-    	<property name="offsetX">
-    		<array>
-    			<value>0</value>
-    			<value>18</value>
-    			<value>36</value>
-    			<value>54</value>
-    			<value>72</value>
-    			<value>90</value>
-    		</array>
-    	</property>
-    	<property name="dictPath" value="/home/martin/dicts/0"/>
-    </bean>
-    
     <bean id="priceConfig" class="demo.chapta.Config">
     	<property name="tmpPath" value="${tmpDirectory}"/>
-    	<property name="dictPath" value="/home/martin/dicts/price"/>
+    	<property name="dictPath" value="${price.dictDirectory}"/>
     	
-    	<property name="minNearSpots" value="1"/>
-    	<property name="width" value="8"/>
-    	<property name="height" value="13"/>
-    	<property name="offsetY" value="2"/>
+    	<property name="minNearSpots" value="${price.minNearSpots}"/>
+    	<property name="width" value="${price.width}"/>
+    	<property name="height" value="${price.height}"/>
+    	<property name="offsetY" value="${price.offsetY}"/>
     	<property name="offsetX">
-    		<array>
-    			<value>2</value>
-    			<value>12</value>
-    			<value>22</value>
-    			<value>32</value>
-    			<value>42</value>
-    		</array>
+    		<value>${price.offsetX}</value>
     	</property>
     </bean>
 </beans>

@@ -1,4 +1,4 @@
-package demo.chapta.controller;
+package demo.chapta.util;
 
 import java.io.IOException;
 import java.util.Date;

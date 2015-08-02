@@ -1,5 +1,6 @@
 package demo.chapta.security;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -8,6 +9,7 @@ import java.security.Signature;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.crypto.Cipher;
@@ -66,7 +68,14 @@ public class CertificateCoder {
         Certificate certificate = certificateFactory.generateCertificate(in);  
         in.close();  
   
-        return certificate;  
+        return certificate;
+    }
+    
+    private static Certificate getCertificate(byte[] binaryCert) throws Exception {
+    	
+    	CertificateFactory certificateFactory = CertificateFactory.getInstance(X509);
+    	Certificate certificate = certificateFactory.generateCertificate(new ByteArrayInputStream(binaryCert));
+    	return certificate;
     }
     
     /** 
@@ -319,22 +328,42 @@ public class CertificateCoder {
         return signature.verify(org.apache.commons.codec.binary.Base64.decodeBase64(sign));
     }
     
+    public static boolean verify(byte[] data, String sign, byte[] certificate) throws Exception {
+    	
+    	//获得证书  
+        X509Certificate x509Certificate = (X509Certificate)getCertificate(certificate);
+        //获得公钥
+        PublicKey publicKey = x509Certificate.getPublicKey();
+        //构建签名
+        Signature signature = Signature.getInstance(x509Certificate.getSigAlgName());
+        signature.initVerify(publicKey);
+        signature.update(data);
+        return signature.verify(org.apache.commons.codec.binary.Base64.decodeBase64(sign));
+    }
+    
     public static void main(String[] args) throws Exception{
     	
     	ObjectMapper mapper = new ObjectMapper();
     	Config config = new Config();
-    	config.setExpireTime(new Date());
-    	config.setStartTime(new Date());
     	config.setNo("123456");
     	config.setPasswd("123456");
     	config.setPid("310115198101171132");
     	config.setPname("凌晓舟");
-    	config.setPrice(300);
     	String plainConfig = mapper.writeValueAsString(config);
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	Valid period = new Valid();
+    	period.setFrom(sdf.parse("2015-07-01 00:00:00"));
+    	period.setTo(sdf.parse("2015-09-01 00:00:00"));
+    	
+    	Licence licence = new Licence();
+    	licence.setPeriod(period);
+    	licence.setSignature(sign(mapper.writeValueAsBytes(period), "/home/martin/zlex.keystore", "www.zlex.org", "123456"));
+    	
+    	mapper.writeValue(new java.io.File("/home/martin/licence.txt"), licence);
     	
     	String signature = sign(plainConfig.getBytes(), "/home/martin/zlex.keystore", "www.zlex.org", "123456");
     	
-    	config.setPrice(600);
     	String plainConfig1 = mapper.writeValueAsString(config);
     	System.out.println(verify(plainConfig1.getBytes(), signature, "/home/martin/zlex.cer"));
     	

@@ -1,0 +1,36 @@
+#set( $ContextPath = ${request.contextPath} )
+
+<form class="form-horizontal" onsubmit="return false;">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="opsID">类型</label>
+			<div class="controls">
+				<span id="opsID">$!{client.operation.toArray()[0].id}</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="category">类型</label>
+			<div class="controls">
+				<span id="category">$!{client.operation.toArray()[0].type}</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="startTime">价格</label>
+			<div class="controls">
+				<span id="startTime">+$!{client.operation.toArray()[0].price}</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="startTime">触发时间</label>
+			<div class="controls">
+				<span id="startTime">$!{client.operation.toArray()[0].startTime}</span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="expireTime">有效时间</label>
+			<div class="controls">
+				<span id="expireTime">$!{client.operation.toArray()[0].expireTime}</span>
+			</div>
+		</div>
+	</fieldset>
+</form>

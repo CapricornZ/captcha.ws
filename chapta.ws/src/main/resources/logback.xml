@@ -31,6 +31,9 @@
 	<logger name="org.springframework">
         <level value="INFO" />
     </logger>
+    <logger name="org.hibernate">
+        <level value="INFO" />
+    </logger>
     <logger name="org.apache">
     	<level value="INFO" />
     </logger>

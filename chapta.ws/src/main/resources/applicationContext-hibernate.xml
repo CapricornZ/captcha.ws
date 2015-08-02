@@ -9,17 +9,18 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 	
-	<bean id="org.h2.tools.Server-WebServer" class="org.h2.tools.Server"
+	<!-- <bean id="org.h2.tools.Server-WebServer" class="org.h2.tools.Server"
 		depends-on="dataSource" factory-method="createWebServer" init-method="start"
 		lazy-init="false">
 		<constructor-arg value="-web,-webPort,11111" />
-	</bean>
+	</bean> -->
 	
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
 
 		<property name="driverClassName" value="org.h2.Driver" />
 		<!-- <property name="url" value="jdbc:h2:mem:test;MODE=MYSQL;DB_CLOSE_DELAY=-1" /> -->
-		<property name="url" value="jdbc:h2:file:~/demo.captcha;MODE=MYSQL;DB_CLOSE_DELAY=-1" />
+		<!-- <property name="url" value="jdbc:h2:file:~/demo.captcha;MODE=MYSQL;DB_CLOSE_DELAY=-1" /> -->
+		<property name="url" value="jdbc:h2:tcp://localhost/~/demo.captcha;MODE=MYSQL;DB_CLOSE_DELAY=-1" />
 		<property name="username" value="root" />
 		<property name="password" value="123456" />
 		<!-- druid 连接池的 -->
@@ -65,7 +66,16 @@
         </tx:attributes>
     </tx:advice>
     
-    <bean id="clientService" class="demo.chapta.service.ClientService">
+    <bean id="clientService" class="demo.chapta.service.impl.ClientService">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="configService" class="demo.chapta.service.impl.ConfigService">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="operationService" class="demo.chapta.service.impl.OperationService">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="screenConfigService" class="demo.chapta.service.impl.ScreenConfigService">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	

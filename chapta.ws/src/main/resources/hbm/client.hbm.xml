@@ -11,5 +11,10 @@
         </id>
         <property name="updateTime" type="java.sql.Timestamp" column="updateTime"/>
         <many-to-one name="config" class="demo.chapta.model.Config" lazy="false" column="config_id"/>
+        
+        <set inverse="true" name="operation" table="client_operation" cascade="all" lazy="false">
+        	<key column="client_id"/>
+        	<many-to-many class="demo.chapta.model.Operation" column="operation_id"/>
+        </set>
     </class>
 </hibernate-mapping>

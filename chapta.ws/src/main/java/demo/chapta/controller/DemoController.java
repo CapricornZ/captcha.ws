@@ -58,7 +58,7 @@ public class DemoController {
 	public String acceptActiveCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
 
 		long start = new java.util.Date().getTime();
-		logger.debug("start process ActiveCaptcha : binary stream");
+		logger.info("accept process ActiveCaptcha : binary stream");
 		StringBuilder sbActive = new StringBuilder();
 		try {
 
@@ -83,7 +83,6 @@ public class DemoController {
 	        	int redPercent = itx.getActivePercent();
 	        	
 	        	itx = itx.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, captchaConfig.getMinNearSpots());//灰度处理//黑白//去噪
-	        	//ImageIO.write(subImg, "JPG", new File(String.format(this.captchaConfig.getTmpPath() + "/captcha-item-%d.jpg", i)));
 	            String s = getSingleCharOcr(subImg, captchaConfig.getDict());
 	            
 	            list.add(new Element(i, redPercent, s));
@@ -112,7 +111,7 @@ public class DemoController {
 		
 		long end = new java.util.Date().getTime();
 		logger.info("CAPTCHA:[{}]", sbActive.toString());
-		logger.debug("end process Captcha : cost {}ms", end-start);
+		logger.info("end process ActiveCaptcha : cost {}ms", end-start);
 		return sbActive.toString();
 	}
 	
@@ -122,13 +121,11 @@ public class DemoController {
 		
 		List<String> rtn = new ArrayList<String>();
 		long start = new java.util.Date().getTime();
-		logger.debug("start process Captcha : binary stream");
+		logger.debug("accept process detail Captcha : binary stream");
 		StringBuilder sb = new StringBuilder();
 		try{
 			
 			String strDir = this.captchaConfig.getTmpPath();
-			File dir = new File(strDir);
-			
 			ImageTool it = new ImageTool();
 	    	BufferedImage bi = it.getBufferedImage(file.getInputStream());
 	    	it.setImage(bi);
@@ -157,7 +154,7 @@ public class DemoController {
 		
 		long end = new java.util.Date().getTime();
 		logger.info("CAPTCHA:[{}]", sb.toString());
-		logger.debug("end process Captcha : cost {}ms", end-start);
+		logger.debug("end process detail Captcha : cost {}ms", end-start);
 		String[] result;
 		rtn.add(sb.toString());
 		result = rtn.toArray(new String[0]); 
@@ -169,7 +166,7 @@ public class DemoController {
 	public String acceptCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
 		
 		long start = new java.util.Date().getTime();
-		logger.debug("start process Captcha : binary stream");
+		logger.debug("accept process Captcha : binary stream");
 		StringBuilder sb = new StringBuilder();
 		try{
 			String strDir = this.captchaConfig.getTmpPath() + "/" + new Date().getTime();

@@ -5,8 +5,8 @@ import java.util.Date;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import demo.chapta.controller.CustomDateDeserializer;
-import demo.chapta.controller.CustomDateSerializer;
+import demo.chapta.util.CustomDateDeserializer;
+import demo.chapta.util.CustomDateSerializer;
 
 public class Config {
 
@@ -14,8 +14,6 @@ public class Config {
 	private String passwd;
 	private String pid;
 	private String pname;
-	private Date startTime;
-	private Date expireTime;
 	private Date updateTime;
 	
 	public String getPname() {
@@ -26,15 +24,6 @@ public class Config {
 	}
 	
 	@JsonSerialize(using = CustomDateSerializer.class)
-	public Date getExpireTime() {
-		return expireTime;
-	}
-	@JsonDeserialize(using = CustomDateDeserializer.class)
-	public void setExpireTime(Date expireTime) {
-		this.expireTime = expireTime;
-	}
-	
-	@JsonSerialize(using = CustomDateSerializer.class)
 	public Date getUpdateTime() {
 		return updateTime;
 	}
@@ -42,7 +31,6 @@ public class Config {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-	private int price;
 	
 	public String getNo() {
 		return no;
@@ -61,21 +49,5 @@ public class Config {
 	}
 	public void setPid(String pid) {
 		this.pid = pid;
-	}
-	
-	@JsonSerialize(using = CustomDateSerializer.class)
-	public Date getStartTime() {
-		return startTime;
-	}
-	@JsonDeserialize(using = CustomDateDeserializer.class)
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-	
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
 	}
 }

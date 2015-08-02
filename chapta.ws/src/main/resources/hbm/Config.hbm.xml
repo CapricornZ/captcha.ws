@@ -12,9 +12,6 @@
         <property name="passwd" type="java.lang.String" column="passwd"/>
         <property name="pid" type="java.lang.String" column="pid"/>
         <property name="pname" type="java.lang.String" column="pname"/>
-        <property name="startTime" type="java.sql.Timestamp" column="startTime"/>
-        <property name="expireTime" type="java.sql.Timestamp" column="expireTime"/>
-        <property name="price" type="java.lang.Integer" column="price"/>
         <property name="updateTime" type="java.sql.Timestamp" column="updateTime"/>
     </class>
 </hibernate-mapping>

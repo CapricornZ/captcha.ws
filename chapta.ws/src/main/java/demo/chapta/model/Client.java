@@ -14,6 +14,14 @@ public class Client {
 	private String ip;
 	private Date updateTime;
 	private Config config;
+	
+	public Client(){
+	}
+	
+	public Client(String ip){
+		this.ip = ip;
+	}
+	
 	public Config getConfig() { return config; }
 	public void setConfig(Config config) { this.config = config; }
 	

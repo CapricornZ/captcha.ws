@@ -1,8 +1,7 @@
-package demo.chapta.model;
+package demo.chapta.controller.rest;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import demo.chapta.model.Point;
 
-@XmlRootElement (name = "SubmitPrice")
 public class SubmitPrice {
 
 	/**

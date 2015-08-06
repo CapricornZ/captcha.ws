@@ -28,6 +28,9 @@
         </encoder>
     </appender>
 
+	<logger name="demo.chapta.controller.SecurityInterceptor">
+		<level value="INFO" />
+	</logger>
 	<logger name="org.springframework">
         <level value="INFO" />
     </logger>

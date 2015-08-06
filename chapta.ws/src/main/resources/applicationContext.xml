@@ -8,6 +8,8 @@
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	
+	<import resource="classpath*:globalConfig.xml" />
+	
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
   		<property name="locations" value="classpath:app.properties"/> 
 	</bean>
@@ -17,14 +19,7 @@
 		
     	<property name="tmpPath" value="${tmpDirectory}"/>
     	<property name="dictPath" value="${captchaLogin.dictDirectory}"/>
-    	
-    	<property name="minNearSpots" value="${captchaLogin.minNearSpots}"/>
-    	<property name="width" value="${captchaLogin.width}"/>
-    	<property name="height" value="${captchaLogin.height}"/>
-    	<property name="offsetY" value="${captchaLogin.offsetY}"/>
-    	<property name="offsetX">
-    		<value>${captchaLogin.offsetX}</value>
-    	</property>
+    	<property name="orcConfig" ref="LOGIN"/>
     </bean>
     
 	<!-- 出价时候的验证码 -->
@@ -32,34 +27,40 @@
     	
     	<property name="tmpPath" value="${tmpDirectory}"/>
     	<property name="dictPath" value="${captchaSubmit.dictDirectory}"/>
+    	<property name="orcConfig" ref="CAPTCHA"/>
     	
+    	<!--
     	<property name="minNearSpots" value="${captchaSubmit.minNearSpots}"/>
     	<property name="width" value="${captchaSubmit.width}"/>
     	<property name="height" value="${captchaSubmit.height}"/>
     	<property name="offsetY" value="${captchaSubmit.offsetY}"/>
     	<property name="offsetX">
     		<value>${captchaSubmit.offsetX}</value>
-    		<!-- <array>
+    		<array>
     			<value>5</value>
     			<value>21</value>
     			<value>37</value>
     			<value>53</value>
     			<value>69</value>
     			<value>85</value>
-    		</array> -->
+    		</array>
     	</property>
+    	-->
     </bean>
     
     <bean id="priceConfig" class="demo.chapta.Config">
     	<property name="tmpPath" value="${tmpDirectory}"/>
     	<property name="dictPath" value="${price.dictDirectory}"/>
-    	
-    	<property name="minNearSpots" value="${price.minNearSpots}"/>
-    	<property name="width" value="${price.width}"/>
-    	<property name="height" value="${price.height}"/>
-    	<property name="offsetY" value="${price.offsetY}"/>
-    	<property name="offsetX">
-    		<value>${price.offsetX}</value>
+    	<property name="orcConfig">
+    		<bean class="demo.chapta.controller.rest.OrcConfig">
+				<property name="minNearSpots" value="${price.minNearSpots}"/>
+				<property name="width" value="${price.width}"/>
+				<property name="height" value="${price.height}"/>
+				<property name="offsetY" value="${price.offsetY}"/>
+				<property name="offsetX">
+					<value>${price.offsetX}</value>
+				</property>
+			</bean>
     	</property>
     </bean>
 </beans>

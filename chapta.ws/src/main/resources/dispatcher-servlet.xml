@@ -22,6 +22,14 @@
         	<property name="certificatePath" value="${security.CERT}"/>
         	<property name="licencePath" value="${security.LICENCE}"/>
         </bean>
+        
+        <!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的 -->
+        <!--  
+        <mvc:interceptor>  
+	        <mvc:mapping path="/test/number.do"/>
+	        <bean class="com.host.app.web.interceptor.LoginInterceptor"/>  
+	    </mvc:interceptor>
+	    -->  
     </mvc:interceptors>  
     
     <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->  
@@ -56,6 +64,7 @@
 
 	<bean class="demo.chapta.controller.CommandController">
 		<property name="clientService" ref="clientService"/>
+		<property name="globalConfig" ref="GLOBAL"/>
 	</bean>
 	
 	<bean class="demo.chapta.controller.ClientController">

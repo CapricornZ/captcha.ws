@@ -6,8 +6,7 @@
 <script type="text/javascript" src="${ContextPath}/js/jquery/jquery-1.11.2.min.js"></script>
 <script src="${ContextPath}/js/bootstrap.js"></script>
 <script src="${ContextPath}/js/bootstrap-dialog.min.js"></script>
-<script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap/js/bootstrap.min.js"></script>
-
+<script src="${ContextPath}/js/bootstrap.min.js"></script>
 
 <style>
    .login-dialog .modal-dialog .modal-body .modal-header .modal-footer{
@@ -62,12 +61,11 @@
 					if(result[i].operation.length > 0){
 						var ops = "";
 						for(var j=0; j<result[i].operation.length; j++){
-							ops += result[i].operation[j].type + " @" + result[i].operation[j].startTime + "<br/>"
+							ops += result[i].operation[j].type + "[" + result[i].operation[j].id + "] @" + result[i].operation[j].startTime + "<br/>"
 						}
 						row += "<td>"+ops+"</td>";
 					} else
 						row += "<td></td>";
-					row += "<td>" + result[i].updateTime + "</td>";
 					row += "</tr>";
 					table.append(row);
 				}
@@ -135,8 +133,8 @@
 </script>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span7"><!--MIDDLE content-->
+	<div class="row">
+		<div class="col-sm-7"><!--MIDDLE content-->
 			<table class="table table-striped table-bordered">
 				<tr>
 					<th>ID</th>
@@ -171,7 +169,7 @@
 				</tr>-->
 			</table>
 		</div>
-		<div class="span5"><!--Sidebar content-->
+		<div class="col-sm-5"><!--Sidebar content-->
 			<form class="form-horizontal" onsubmit="return false;">
 				<fieldset>
 	        		<legend>客户端列表</legend>
@@ -180,7 +178,6 @@
 							<tr>
 								<th>HOST/IP</th>
 								<th>已分配の操作</th>
-								<th>更新时间</th>
 							</tr>
 						</table>
 	        		</div>

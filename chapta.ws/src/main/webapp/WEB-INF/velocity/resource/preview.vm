@@ -1,0 +1,218 @@
+#set( $ContextPath = ${request.contextPath} )
+
+<link rel="stylesheet" href="${ContextPath}/css/bootstrap.css" >
+
+<script type="text/javascript" src="${ContextPath}/js/jquery/jquery-1.11.2.min.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		$("button[toggle='LOCAL']").click(function(){
+			var container = $(this).parents('.form-horizontal');
+			var id=container.attr("id");
+			var config = {
+				'offsetX' : container.find('#offsetX').val().split(","),
+				'offsetY' : container.find('#offsetY').val(),
+				'width'   : container.find('#width').val(),
+				'height'  : container.find('#height').val(),
+				'minNearSpots' : container.find('#minNearSpots').val()
+			};
+			
+			var endPoint = "${ContextPath}/command/resource/" + id + "/modify.do";
+			$.ajax({
+				url:endPoint,
+				type:'PUT',
+				cache:false,
+				data:JSON.stringify(config),
+				contentType: 'application/json; charset=utf-8',
+				success: function(json) {
+					alert("修改成功");
+					console.log("reponse :"+ json);
+                }
+			});
+		});
+		
+		$("button[toggle='GLOBAL']").click(function(){
+			var container = $(this).parents('.form-horizontal');
+			var id=container.attr("id");
+			var config = {
+				'offsetX' : container.find('#offsetX').val().split(","),
+				'offsetY' : container.find('#offsetY').val(),
+				'width'   : container.find('#width').val(),
+				'height'  : container.find('#height').val()
+			};
+			
+			var endPoint = "${ContextPath}/command/resource/" + id + "/modify.do";
+			$.ajax({
+				url:endPoint,
+				type:'PUT',
+				cache:false,
+				data:JSON.stringify(config),
+				contentType: 'application/json; charset=utf-8',
+				success: function(json) {
+					alert("修改成功");
+					console.log("reponse :"+ json);
+                }
+			});
+		});
+	});
+</script>
+
+<div class="container-fluid">
+	<legend>预览全局配置</legend>
+	<div class="row"><!--fluid-->
+		<div class="col-md-3"><!--Sidebar content-->
+			<div class="form-horizontal" id="PRICE">
+				<legend><small>PRICE:83300</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${PRICE.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${PRICE.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">width*height</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${PRICE.width}">
+    				</div>
+    				<div class="col-sm-1">*</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${PRICE.height}">
+    				</div>
+  				</div>
+				<div class="col-sm-offset-4 col-sm-10">
+					<button class="btn btn-primary" toggle="GLOBAL">修改</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3"><!--Sidebar content-->
+			<div class="form-horizontal" id="LOADING">
+				<legend><small>LOADING:正在获取校验码</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${LOADING.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${LOADING.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">width*height</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${LOADING.width}">
+    				</div>
+    				<div class="col-sm-1">*</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${LOADING.height}">
+    				</div>
+  				</div>
+				<div class="col-sm-offset-4 col-sm-10">
+					<button class="btn btn-primary" toggle="GLOBAL">修改</button>
+				</div>
+			</div>
+		</div>
+	
+		<div class="col-md-3"><!--Sidebar content-->
+			<div class="form-horizontal" id="TIPS">
+				<legend><small>TIPS：请输入前|请输入后|请输入第</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${TIPS.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${TIPS.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">width*height</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${TIPS.width}">
+    				</div>
+    				<div class="col-sm-1">*</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${TIPS.height}">
+    				</div>
+  				</div>
+				<div class="col-sm-offset-4 col-sm-10">
+					<button class="btn btn-primary" toggle="GLOBAL">修改</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3"><!--Sidebar content-->
+			<div class="form-horizontal" id="TIPS.NO">
+				<legend><small>TIPS.NO</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${TIPSNO.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${TIPSNO.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">width*height</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${TIPSNO.width}">
+    				</div>
+    				<div class="col-sm-1">*</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${TIPSNO.height}">
+    				</div>
+  				</div>
+				<div class="col-sm-offset-4 col-sm-10">
+					<button class="btn btn-primary" toggle="GLOBAL">修改</button>
+				</div>
+			</div>
+		</div>
+	</div><!--fluid-->
+	
+	<div class="row-fluid"><!--fluid-->
+		<div class="col-md-3"><!--Sidebar content-->
+			<div class="form-horizontal" id="CAPTCHA">
+				<legend><small>CAPTCHA:678682</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${CAPTCHA.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${CAPTCHA.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">width*height</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${CAPTCHA.width}">
+    				</div>
+    				<div class="col-sm-1">*</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${CAPTCHA.height}">
+    				</div>
+  				</div>
+				<div class="col-sm-offset-4 col-sm-10">
+					<button class="btn btn-primary" toggle="GLOBAL">修改</button>
+				</div>
+			</div><!--form-horizontal-->
+		</div><!--Sidebar content-->
+	</div><!--fluid-->
+</div>

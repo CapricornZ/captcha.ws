@@ -49,7 +49,7 @@ public class SecurityInterceptor implements WebRequestInterceptor {
 		try{
 			period = this.objMapper.writeValueAsBytes(licence.getPeriod());
 		}catch(Exception ex){
-			logger.debug("拒绝服务：Licence文件格式错误！");
+			logger.error("拒绝服务：Licence文件格式错误！");
 			throw new Exception("拒绝服务：Licence文件格式错误！");
 		}
 		if(!CertificateCoder.verify(period, licence.getSignature(), this.certificate)){
@@ -65,6 +65,7 @@ public class SecurityInterceptor implements WebRequestInterceptor {
 			logger.error(error);
 			throw new Exception(error);
 		}
+		logger.info("通过验证");
 	}
 
 	@Override

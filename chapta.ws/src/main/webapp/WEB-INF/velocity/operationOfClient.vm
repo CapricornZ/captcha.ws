@@ -2,34 +2,34 @@
 
 <form class="form-horizontal" onsubmit="return false;">
 	<fieldset>
-		<div class="control-group">
-			<label class="control-label" for="opsID">类型</label>
-			<div class="controls">
-				<span id="opsID">$!{client.operation.toArray()[0].id}</span>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="opsID">类型</label>
+			<div class="controls col-sm-10">
+				<p class="form-control-static" id="opsID">$!{client.operation.toArray()[0].id}</p>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="category">类型</label>
-			<div class="controls">
-				<span id="category">$!{client.operation.toArray()[0].type}</span>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="category">类型</label>
+			<div class="controls col-sm-10">
+				<p class="form-control-static" id="category">$!{client.operation.toArray()[0].type}</p>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="startTime">价格</label>
-			<div class="controls">
-				<span id="startTime">+$!{client.operation.toArray()[0].price}</span>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="startTime">价格</label>
+			<div class="controls col-sm-10">
+				<p class="form-control-static" id="startTime">+$!{client.operation.toArray()[0].price}</p>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="startTime">触发时间</label>
-			<div class="controls">
-				<span id="startTime">$!{client.operation.toArray()[0].startTime}</span>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="startTime">触发时间</label>
+			<div class="controls col-sm-10">
+				<p class="form-control-static" id="startTime">$!{client.operation.toArray()[0].startTime}</p>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="expireTime">有效时间</label>
-			<div class="controls">
-				<span id="expireTime">$!{client.operation.toArray()[0].expireTime}</span>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="expireTime">有效时间</label>
+			<div class="controls col-sm-10">
+				<p class="form-control-static" id="expireTime">$!{client.operation.toArray()[0].expireTime}</p>
 			</div>
 		</div>
 	</fieldset>

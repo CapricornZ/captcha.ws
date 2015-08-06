@@ -33,7 +33,7 @@ public class ConfigController {
 		this.clientService = clientServ;
 	}
 	
-	@RequestMapping(value = "/init.do",method=RequestMethod.GET)
+	@RequestMapping(value = "/init.do", method=RequestMethod.GET)
 	public String initConfig(Model model){
 		
 		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy/MM/dd");
@@ -44,11 +44,17 @@ public class ConfigController {
 		return "preConfig";
 	}
 	
+	/***
+	 * 创建标书、用户
+	 * @param config
+	 * @param clientHost
+	 */
 	@RequestMapping(value = "/new.do",method=RequestMethod.POST)
 	@ResponseBody
 	public void createConfig(@RequestBody demo.chapta.model.Config config, 
 			@RequestParam("client")String clientHost){
 		
+		logger.info("Create new Config {user:{}}. Assign to HOST:【{}】", config.getPname(), clientHost);
 		if("".equals(clientHost)){			
 			this.configService.saveOrUpdate(config);
 		} else {

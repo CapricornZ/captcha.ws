@@ -1,8 +1,11 @@
-package demo.chapta.model;
+package demo.chapta.controller.rest;
 
-import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement (name = "Bid")
+/***
+ * BID SCREEN CONFIG
+ * @author martin
+ *
+ */
 public class Bid {
 
 	private GivePrice give;

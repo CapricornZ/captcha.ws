@@ -11,37 +11,26 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
+import demo.chapta.controller.rest.OrcConfig;
+
 public class Config {
 	
 	public static Config load() throws FileNotFoundException, IOException{
 
 		Properties prop = new Properties();
-		//prop.load(Config.class.getResourceAsStream("application.properties"));
 		prop.load(new FileInputStream("application.properties"));
 		
 		Config rtn = new Config();
-		rtn.setHeight(Integer.parseInt(prop.getProperty("height")));
-		rtn.setWidth(Integer.parseInt(prop.getProperty("width")));
-		
-		rtn.setMinNearSpots(Integer.parseInt(prop.getProperty("minNearSpots")));
-		
 		String offsetX = prop.getProperty("offsetX");
 		String[] array = offsetX.split(",");
 		int[] arrayInt = new int[array.length];
 		for(int i=0; i<array.length; i++)
 			arrayInt[i] = Integer.parseInt(array[i]);
-		rtn.setOffsetX(arrayInt);
-		rtn.setOffsetY(Integer.parseInt(prop.getProperty("offsetY")));
 		return rtn;
 	}
-	
-	private int minNearSpots;
-	private int[] offsetX;
-	private int offsetY;
-	
-	private int width;
-	private int height;
 
+	private String tmpPath;
+	private OrcConfig orcConfig;
 	private Map<BufferedImage, String> dict;
 	
 	public Map<BufferedImage, String> getDict(){ return dict; }
@@ -56,22 +45,18 @@ public class Config {
     	this.dict = map;
 	}
 	
-	public int getMinNearSpots() { return minNearSpots; }
-	public void setMinNearSpots(int minNearSpots) { this.minNearSpots = minNearSpots; }
+	public void setOrcConfig(OrcConfig config){ this.orcConfig = config; }
 	
-	public int[] getOffsetX() { return offsetX; }
-	public void setOffsetX(int[] offsetX) { this.offsetX = offsetX; }
+	public int getMinNearSpots() { return orcConfig.getMinNearSpots(); }
 	
-	public int getOffsetY() { return offsetY; }
-	public void setOffsetY(int offsetY) { this.offsetY = offsetY; }
+	public int[] getOffsetX() { return orcConfig.getOffsetX(); }
 	
-	public int getWidth() { return width; }
-	public void setWidth(int width) { this.width = width; }
+	public int getOffsetY() { return orcConfig.getOffsetY(); }
 	
-	public int getHeight() { return height; }
-	public void setHeight(int height) { this.height = height; }
+	public int getWidth() { return orcConfig.getWidth(); }
 	
-	private String tmpPath;
+	public int getHeight() { return orcConfig.getHeight(); }
+
 	public void setTmpPath(String path){ this.tmpPath = path; }
 	public String getTmpPath(){ return this.tmpPath; }
 }

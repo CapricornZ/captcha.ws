@@ -114,8 +114,8 @@
 </script>
 
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span6"><!--Sidebar content-->
+	<div class="row">
+		<div class="col-sm-6"><!--Sidebar content-->
 			<form class="form-horizontal" onsubmit="return false;">
 			<fieldset>
         		<legend>客户端列表</legend>
@@ -133,7 +133,7 @@
 			</form>
         </div><!--Sidebar content-->
         
-        <div class="span6"><!--Body content-->
+        <div class="col-sm-6"><!--Body content-->
 	    <form class="form-horizontal" onsubmit="return false;">
 			<fieldset>
         		<legend>创建OPERATION</legend>
@@ -144,27 +144,27 @@
 						</tr>
 					</table>
         		</div>
-        		<div class="control-group">
-					<label class="control-label" for="startTimeInput">触发时间</label>
-					<div class="controls">
-						<div class="input-prepend">
-							<span class="add-on">@</span>
-							<input id="startTimeInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="startTime"></input>
+        		<div class="form-group">
+					<label class="control-label col-sm-2" for="startTimeInput">触发时间</label>
+					<div class="controls col-sm-2">
+						<div class="input-group">
+							<span class="input-group-addon">@</span>
+							<input id="startTimeInput" class="form-control" style="width:200px;height:30px;" type="text" placeholder="startTime"></input>
 						</div>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label" for="expireTimeInput">有效时间</label>
-					<div class="controls">
-						<div class="input-prepend">
-						  	<span class="add-on">@</span>
-						  	<input id="expireTimeInput" class="input-xlarge" style="width:200px;height:30px;" type="text" placeholder="expireTime"></input>
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="expireTimeInput">有效时间</label>
+					<div class="controls col-sm-2">
+						<div class="input-group">
+						  	<span class="input-group-addon">@</span>
+						  	<input id="expireTimeInput" class="form-control" style="width:200px;height:30px;" type="text" placeholder="expireTime"></input>
 						</div>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label" for="price">加价选择</label>
-					<div class="controls">
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="price">加价选择</label>
+					<div class="controls col-sm-2">
 						<select id="price">
 							<option value="100">+100</option>
 							<option value="200">+200</option>

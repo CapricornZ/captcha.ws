@@ -3,11 +3,10 @@
 <link rel="stylesheet" href="${ContextPath}/css/bootstrap.css" >
 
 <script type="text/javascript" src="${ContextPath}/js/jquery/jquery-1.11.2.min.js"></script>
-<!--<script type="text/javascript" src="${ContextPath}/js/bootstrap.js"></script>-->
-<script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ContextPath}/js/bootstrap.js"></script>
 
-<link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
-<script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.min.js"></script>
+<link href="${ContextPath}/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+<script src="${ContextPath}/js/bootstrap-dialog.min.js"></script>
 
 <script type="text/javascript">
 	$(function(){

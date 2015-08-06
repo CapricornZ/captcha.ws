@@ -53,6 +53,13 @@ public class DemoController {
 	private Config priceConfig;
 	public void setPriceConfig(Config config){ this.priceConfig = config; }
 	
+	/***
+	 * 识别图片红色验证码
+	 * 1. 中值过滤
+	 * 2. 保留白色和红色
+	 * @param file
+	 * @return
+	 */
 	@RequestMapping(value = "/captcha/red.do")
 	@ResponseBody
 	public String acceptActiveCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
@@ -68,9 +75,9 @@ public class DemoController {
 
 			ImageTool it = new ImageTool();
 			it.setImage(it.getBufferedImage(file.getInputStream()));
-			it.saveToFile(strDir + "/before.jpg");
+			it.saveToFile(strDir + "/before.bmp");
 	        it = it.midddleValueFilter(20, true).holdRed();//中值过滤//保留红色和白色背景
-	        it.saveToFile(strDir + "/after.jpg");
+	        it.saveToFile(strDir + "/after.bmp");
 	        
 	        List<Element> list = new ArrayList<Element>();
 	        BufferedImage img = it.getImage();
@@ -115,6 +122,13 @@ public class DemoController {
 		return sbActive.toString();
 	}
 	
+	/***
+	 * 1.灰度处理
+	 * 2.二值处理（黑白）
+	 * 3.去噪点
+	 * @param file
+	 * @return
+	 */
 	@RequestMapping(value = "/captcha/detail.do")
 	@ResponseBody
 	public String[] detailCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
@@ -129,9 +143,9 @@ public class DemoController {
 			ImageTool it = new ImageTool();
 	    	BufferedImage bi = it.getBufferedImage(file.getInputStream());
 	    	it.setImage(bi);
-	    	it.saveToFile(strDir + "/captchaBefore.jpg");
+	    	it.saveToFile(strDir + "/captchaBefore.bmp");
 	        it = it.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, this.captchaConfig.getMinNearSpots());//灰度处理,黑白,去噪
-	        it.saveToFile(strDir + "/captchaAfter.jpg");
+	        it.saveToFile(strDir + "/captchaAfter.bmp");
 	        
 	        BufferedImage img = it.getImage();
 	        for(int i=0; i<captchaConfig.getOffsetX().length; i++){
@@ -161,6 +175,13 @@ public class DemoController {
 		return result;
 	}
 	
+	/***
+	 * 1.灰度处理
+	 * 2.二值处理（黑白）
+	 * 3.去噪点
+	 * @param file
+	 * @return
+	 */
 	@RequestMapping(value = "/captcha.do")
 	@ResponseBody
 	public String acceptCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
@@ -176,16 +197,15 @@ public class DemoController {
 			ImageTool it = new ImageTool();
 	    	BufferedImage bi = it.getBufferedImage(file.getInputStream());
 	    	it.setImage(bi);
-	    	it.saveToFile(strDir + "/captchaBefore.jpg");
+	    	it.saveToFile(strDir + "/captchaBefore.bmp");
 	        it = it.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, captchaConfig.getMinNearSpots());//灰度处理,黑白,去噪
-	        it.saveToFile(strDir + "/captchaAfter.jpg");
+	        it.saveToFile(strDir + "/captchaAfter.bmp");
 	        
 	        BufferedImage img = it.getImage();
 	        for(int i=0; i<captchaConfig.getOffsetX().length; i++){
 	        	
 	        	BufferedImage item = img.getSubimage(captchaConfig.getOffsetX()[i], captchaConfig.getOffsetY(),
 	        			captchaConfig.getWidth(), captchaConfig.getHeight());
-	        	//ImageIO.write(item, "JPG", new File(String.format(this.captchaConfig.getTmpPath() + "/captcha-item-%d.jpg", i)));
 	            String s = getSingleCharOcr(item, captchaConfig.getDict());
 	            sb.append(s);
 	        }
@@ -267,6 +287,5 @@ public class DemoController {
             return 1;  
         }  
         return 0;  
-    }  
-
+    }
 }

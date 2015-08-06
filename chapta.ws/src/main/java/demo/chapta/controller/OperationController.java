@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import demo.chapta.model.Bid;
+import demo.chapta.controller.rest.AssignOperation;
+import demo.chapta.controller.rest.Bid;
+import demo.chapta.controller.rest.CreateBidRequest;
 import demo.chapta.model.BidOperation;
 import demo.chapta.model.Client;
 import demo.chapta.model.Operation;
@@ -131,7 +133,7 @@ public class OperationController {
 	public void acceptOperation(@RequestBody CreateBidRequest req) throws ParseException{
 
 		ScreenConfig screenConfig = this.screenService.getByID(req.getScreenID());
-		List<Client> clients = this.clientService.listByIPs(req.hosts);
+		List<Client> clients = this.clientService.listByIPs(req.getHosts());
 		BidOperation bid = req.getBid();
 		bid.setContent(screenConfig.getJsonContent());
 		this.operationService.updateClientOperation(bid, clients);
@@ -173,35 +175,5 @@ public class OperationController {
 		List<ScreenConfig> screens = this.screenService.listAll();
 		model.addAttribute("screens", screens);
 		return "screen/list";
-	}
-	
-	/***
-	 * 分配Operation请求
-	 * @author martin
-	 */
-	static public class AssignOperation{
-		private String[] hosts;
-		int operationID;
-		
-		public void setHosts(String[] hosts){ this.hosts = hosts; }
-		public String[] getHosts(){ return this.hosts; }
-		
-		public void setOperationID(int value){ this.operationID = value; }
-		public int getOperationID(){ return this.operationID; }
-	}
-	
-	static public class CreateBidRequest{
-		private int screenID;
-		private String[] hosts;
-		private BidOperation bid;
-		
-		public int getScreenID() { return screenID; }
-		public void setScreenID(int screenID) { this.screenID = screenID; }
-		
-		public String[] getHosts() { return hosts; }
-		public void setHosts(String[] hosts) { this.hosts = hosts; }
-		
-		public BidOperation getBid() { return bid; }
-		public void setBid(BidOperation bid) { this.bid = bid; }
 	}
 }

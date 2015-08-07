@@ -65,7 +65,7 @@ public class SecurityInterceptor implements WebRequestInterceptor {
 			logger.error(error);
 			throw new Exception(error);
 		}
-		logger.info("通过验证");
+		logger.debug("通过验证");
 	}
 
 	@Override

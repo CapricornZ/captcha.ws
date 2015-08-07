@@ -1,0 +1,21 @@
+<!-- <jboss-deployment-structure>
+  <deployment>
+     <exclude-subsystems>
+        <subsystem name="logging" />
+    </exclude-subsystems>
+  </deployment>
+</jboss-deployment-structure> -->
+
+<jboss-deployment-structure>
+	<deployment>
+		<exclusions>
+			<module name="org.slf4j" />
+			<module name="org.slf4j.impl" />
+			<module name="org.jboss.resteasy.resteasy-jackson2-provider"/>			
+		</exclusions>
+
+		<exclude-subsystems>
+			<subsystem name="webservices" />
+	    </exclude-subsystems>
+	</deployment>
+</jboss-deployment-structure>

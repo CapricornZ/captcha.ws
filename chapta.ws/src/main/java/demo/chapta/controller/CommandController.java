@@ -69,6 +69,7 @@ public class CommandController implements ApplicationContextAware {
 	@RequestMapping(value = "/resource/preview", method={RequestMethod.GET})
 	public String previewResource(Model model){
 
+		model.addAttribute("TAG", this.globalConfig.getTag());
 		model.addAttribute("PRICE", this.context.getBean("PRICE"));
 		model.addAttribute("TIPS", this.context.getBean("TIPS"));
 		model.addAttribute("TIPSNO", this.context.getBean("TIPS.NO"));

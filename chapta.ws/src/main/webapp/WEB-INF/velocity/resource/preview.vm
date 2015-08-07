@@ -58,7 +58,7 @@
 </script>
 
 <div class="container-fluid">
-	<legend>预览全局配置</legend>
+	<legend>预览全局配置 - ${TAG}版</legend>
 	<div class="row"><!--fluid-->
 		<div class="col-md-3"><!--Sidebar content-->
 			<div class="form-horizontal" id="PRICE">

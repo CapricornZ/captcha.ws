@@ -135,13 +135,14 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-7"><!--MIDDLE content-->
+			<legend>操作列表</legend>
 			<table class="table table-striped table-bordered">
 				<tr>
 					<th>ID</th>
 					<th>类型</th>
 					<th>关联の客户端</th>
 					<th>触发时间</th>
-					<th>其他选项</th>
+					<th>其他</th>
 					<th>操作</th>
 					<th></th>
 				</tr>

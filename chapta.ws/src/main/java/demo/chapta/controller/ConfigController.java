@@ -36,12 +36,20 @@ public class ConfigController {
 	@RequestMapping(value = "/init.do", method=RequestMethod.GET)
 	public String initConfig(Model model){
 		
-		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy/MM/dd");
-		String startTime = formatter.format(new Date()) + " 11:29:52";
-		String exipreTime = formatter.format(new Date()) + " 11:29:53";
-		model.addAttribute("startTime", startTime);
-		model.addAttribute("expireTime", exipreTime);
+		//SimpleDateFormat formatter = new SimpleDateFormat ("yyyy/MM/dd");
+		//String startTime = formatter.format(new Date()) + " 11:29:52";
+		//String exipreTime = formatter.format(new Date()) + " 11:29:53";
+		//model.addAttribute("startTime", startTime);
+		//model.addAttribute("expireTime", exipreTime);
+		
+		model.addAttribute("configs", this.configService.listAll());
 		return "preConfig";
+	}
+	
+	@RequestMapping(value = "/delete.do",method=RequestMethod.DELETE)
+	@ResponseBody
+	public void deleteConfig(@RequestParam("config")String configID){
+		this.configService.delete(configID);
 	}
 	
 	/***

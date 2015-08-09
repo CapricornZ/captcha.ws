@@ -1,6 +1,5 @@
 package demo.chapta.controller.rest;
 
-import demo.chapta.model.Point;
 
 public class SubmitPrice {
 

@@ -20,6 +20,7 @@ import demo.chapta.controller.rest.Bid;
 import demo.chapta.controller.rest.CreateBidRequest;
 import demo.chapta.model.BidOperation;
 import demo.chapta.model.Client;
+import demo.chapta.model.LoginOperation;
 import demo.chapta.model.Operation;
 import demo.chapta.model.ScreenConfig;
 import demo.chapta.service.IClientService;
@@ -47,7 +48,7 @@ public class OperationController {
 	public void setClientService(IClientService clientServ){
 		this.clientService = clientServ;
 	}
-	
+
 	/***
 	 * 创建ScreenConfig（来自HOST）
 	 * @param fromHost
@@ -111,9 +112,17 @@ public class OperationController {
 	 */
 	@RequestMapping(value = "/BID/accept.do",method=RequestMethod.POST)
 	@ResponseBody
-	public void acceptOperation(@RequestBody BidOperation bid){
-		
+	public void acceptBidOperation(@RequestBody BidOperation bid){
 		this.operationService.saveOrUpdate(bid);
+	}
+	/***
+	 * 新建Operation
+	 * @param bid
+	 */
+	@RequestMapping(value = "/LOGIN/accept.do",method=RequestMethod.POST)
+	@ResponseBody
+	public void acceptLoginOperation(@RequestBody LoginOperation login){
+		this.operationService.saveOrUpdate(login);
 	}
 	
 	@RequestMapping(value = "/assign.do",method=RequestMethod.POST)
@@ -141,7 +150,15 @@ public class OperationController {
 	
 	@RequestMapping(value = "/BID/{operationID}",method=RequestMethod.PUT)
 	@ResponseBody
-	public String modifyOperation(@RequestBody BidOperation operation, @PathVariable("operationID") int opsID){
+	public String modifyBIDOperation(@RequestBody BidOperation operation, @PathVariable("operationID") int opsID){
+
+		this.operationService.saveOrUpdate(operation);
+		return "SUCCESS";
+	}
+	
+	@RequestMapping(value = "/LOGIN/{operationID}",method=RequestMethod.PUT)
+	@ResponseBody
+	public String modifyLOGINOperation(@RequestBody LoginOperation operation, @PathVariable("operationID") int opsID){
 
 		this.operationService.saveOrUpdate(operation);
 		return "SUCCESS";
@@ -152,7 +169,9 @@ public class OperationController {
 		
 		Operation ops = this.operationService.queryByID(opsID);
 		model.addAttribute("operation", ops);
-		return "operation/modifyDialog";
+		
+		String rtn = String.format("operation/modify%sDialog", ops.getType());
+		return rtn;
 	}
 	
 	@RequestMapping(value = "/list",method=RequestMethod.GET)
@@ -175,5 +194,15 @@ public class OperationController {
 		List<ScreenConfig> screens = this.screenService.listAll();
 		model.addAttribute("screens", screens);
 		return "screen/list";
+	}
+	
+	@RequestMapping(value = "/screenconfig/bidForm.do",method=RequestMethod.GET)
+	public String newBidForm(){
+		return "screen/newBidForm";
+	}
+	
+	@RequestMapping(value = "/screenconfig/loginForm.do",method=RequestMethod.GET)
+	public String newLoginForm(){
+		return "screen/newLoginForm";
 	}
 }

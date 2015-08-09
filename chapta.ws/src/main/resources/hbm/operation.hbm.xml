@@ -22,6 +22,9 @@
         
         <subclass name="demo.chapta.model.BidOperation" discriminator-value="BID">  
             <property name="price"/>  
+        </subclass>
+        
+        <subclass name="demo.chapta.model.LoginOperation" discriminator-value="LOGIN">
         </subclass> 
     </class>
 </hibernate-mapping>

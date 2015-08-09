@@ -23,7 +23,7 @@ public class ScreenConfigService extends Service implements IScreenConfigService
 	@Override
 	public List<ScreenConfig> listAll() {
 
-		String hql = "from ScreenConfig";
+		String hql = "from ScreenConfig order by createTime desc";
 		Query query = this.getSession().createQuery(hql);
 		return query.list();
 	}
@@ -32,7 +32,7 @@ public class ScreenConfigService extends Service implements IScreenConfigService
 	@Override
 	public List<ScreenConfig> listByCategory(String category) {
 		
-		String hql = "from ScreenConfig where category=:category";
+		String hql = "from ScreenConfig where category=:category order by createTime desc";
 		Query query = this.getSession().createQuery(hql);
 		query.setParameter("category", category);
 		return query.list();

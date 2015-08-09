@@ -91,6 +91,7 @@
 		$("button[toggle='MODIFY']").click(function(){
 
 			var opsID = $(this).attr("opsID");
+			var opsType = $(this).attr("opsType");
 			BootstrapDialog.show({
 				cssClass: 'login-dialog',
 				title:"修改Operation",
@@ -98,19 +99,21 @@
 	            buttons:[{
 	            	label:"保存",
 	            	action:function(dialogItself){
-	            		var bidOps = {
-							id:$('#operationID').val(),
-							type:"BID",
-							startTime:$('#startTimeInput').val(),
-							expireTime:$('#expireTimeInput').val(),
-							price:$('#price').val(),
+	            		var opsParam = {
+							id  : $('#operationID').val(),
+							type: opsType,
+							startTime : $('#startTimeInput').val(),
+							expireTime: $('#expireTimeInput').val(),
 							content:$('#jsonContent').val()
 						};
+						var endPoint = '${ContextPath}/command/operation/' + opsType + '/' + $('#operationID').val() + '.do';
+						if(opsType=="BID")
+							opsParam.price = $('#price').val();
 						
 						$.ajax({
-						    url: '${ContextPath}/command/operation/BID/' + $('#operationID').val() + '.do',
+						    url : endPoint,
 			    			type: 'PUT',
-			    			data:JSON.stringify(bidOps),
+			    			data:JSON.stringify(opsParam),
 							contentType: 'application/json;charset=utf-8;',
 							error: function(msg) { alert("error"); },
 							complete: function(msg) { console.log("complete"); },
@@ -140,8 +143,6 @@
 				<tr>
 					<th>ID</th>
 					<th>类型</th>
-					<th>关联の客户端</th>
-					<th>触发时间</th>
 					<th>其他</th>
 					<th>操作</th>
 					<th></th>
@@ -150,11 +151,9 @@
 				<tr opsID="${operation.id}">
 					<td>${operation.id}</td>
 					<td>${operation.type}</td>
-					<td>${operation.clients.size()}</td>
-					<td>${operation.startTime}</td>
-					<td>$!{operation.price}</td>
+					<td>$!{operation.tips}</td>
 					<td>
-						<button class="btn btn-primary" toggle="MODIFY" opsID="${operation.id}"><i class="icon-edit icon-white"></i>修改</button>
+						<button class="btn btn-primary" toggle="MODIFY" opsID="${operation.id}" opsType="${operation.type}"><i class="icon-edit icon-white"></i>修改</button>
 						#if(${operation.clients.size()} == 0)
 						<button class="btn btn-primary" toggle="DELETE" opsID="${operation.id}"><i class="icon-trash icon-white"></i>删除</button>
 						#else

@@ -44,4 +44,18 @@ public class ConfigService extends Service implements IConfigService {
 		return config;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Config> listAll() {
+		
+		return (List<Config>)this.getSession().createQuery("from Config").list();
+	}
+
+	@Override
+	public void delete(String config) {
+		
+		Config cfg = new Config();
+		cfg.setNo(config);
+		this.getSession().delete(cfg);
+	}
 }

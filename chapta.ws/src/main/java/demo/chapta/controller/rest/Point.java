@@ -1,4 +1,4 @@
-package demo.chapta.model;
+package demo.chapta.controller.rest;
 
 public class Point {
 	

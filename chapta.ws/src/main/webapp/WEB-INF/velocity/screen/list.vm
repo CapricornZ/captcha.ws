@@ -10,6 +10,7 @@
 
 <script type="text/javascript">
 	$(function(){
+	
 		var date = new Date();
 		var yyyy = date.getFullYear();
 		var m = date.getMonth() + 1;
@@ -19,31 +20,45 @@
 		
 		var strNow = yyyy + '-' + mm + '-' + dd;
 		$("#startTimeInput").mask(strNow + " 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
-		$("#expireTimeInput").mask("9999-99-99 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
+		$("#expireTimeInput").mask(strNow + " 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
 	
-		$('#OK').click(function(){
+		var action = $(this).find("option:selected").attr('url');
+		$("div[toggle='subForm']").load(action);
 		
+		$("#opsType").change(function(){
+			
+			var action = $(this).find("option:selected").attr('url');
+			$("div[toggle='subForm']").load(action);
+		});
+		
+		$('#OK').click(function(){
+			
 			var screen = $("input[name='screen']:checked");
 			if(screen.length == 0){
-				alert("选择screen先");return;
+				alert("选择SCREEN先");return;
 			}
 			
+			var type = $("#opsType").val();
 			var startTime = $("#startTimeInput").val();
 			var expireTime = $("#expireTimeInput").val();
-			var price = $("#price").val();
 			var json = $('#' + $(screen[0]).val()).children().eq(2).html();
-			var bidParam = {
-				'price':price, 
-				'type' :'BID',
+			var endPoint = '${ContextPath}/command/operation/' + type + '/accept.do';
+			var opsParam = { 
+				'type' :type,
 				'startTime' :startTime,
 				'expireTime':expireTime,
 				'content'   :json
 			};
 			
+			if(type == "LOGIN"){
+			}
+			if(type == "BID")
+				opsParam.price = $("#price").val();
+			
 			$.ajax({
-				url : '${ContextPath}/command/operation/BID/accept.do',
+				url : endPoint,
 				type: 'POST',
-				data:JSON.stringify(bidParam),
+				data:JSON.stringify(opsParam),
 				contentType: 'application/json;charset=utf-8;',
 				success: function(json) {
 					alert("SUCCESS");
@@ -77,6 +92,17 @@
 			<div id="newOperationFrom" class="form-horizontal"><!--FORM-->
 				<fieldset>
 					<legend>选择SCREEN，创建操作</legend>
+					
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="opsType">类型</label>
+						<div class="controls col-sm-2">
+							<select id="opsType">
+								<option value="LOGIN"url="loginForm.do">登录</option>
+								<option value="BID" url="bidForm.do" SELECTED>出价</option>
+							</select>
+						</div>
+					</div>
+					
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="startTimeInput">触发时间</label>
 						<div class="controls col-sm-2">
@@ -95,7 +121,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-group">
+					<!--<div class="form-group">
 						<label class="control-label col-sm-2" for="price">加价选择</label>
 						<div class="controls col-sm-2">
 							<select id="price">
@@ -107,6 +133,8 @@
 								<option value="600">+600</option>
 							</select>
 						</div>
+					</div>-->
+					<div class="form-group" toggle="subForm">
 					</div>
 					<div class="col-sm-offset-2 col-sm-3">
 						<button class="btn btn-primary" type="submit" id="OK">确定</button>

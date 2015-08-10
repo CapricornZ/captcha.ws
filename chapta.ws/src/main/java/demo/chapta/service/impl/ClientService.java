@@ -1,11 +1,13 @@
 package demo.chapta.service.impl;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
 
 import demo.chapta.model.Client;
+import demo.chapta.model.Operation;
 import demo.chapta.service.IClientService;
 import demo.chapta.service.Service;
 
@@ -77,6 +79,28 @@ public class ClientService extends Service implements IClientService {
     	query.setParameterList("ips", hosts);
 
     	return query.list();
+	}
+
+	@Override
+	public void removeOperation(String host, int operationID) {
+		
+		Query query = this.getSession().createQuery("from Operation where id=:id");
+		@SuppressWarnings("unchecked")
+		List<Operation> ops = query.setParameter("id", operationID).list();
+		if(ops.size() > 0){
+			
+			Operation operation = ops.get(0);
+			boolean bFound = false;
+			for (Iterator iter = operation.getClients().iterator(); !bFound && iter.hasNext();) {
+				
+				Client client = (Client)iter.next();
+				if(client.getIp().equals(host)){
+					operation.getClients().remove(client);
+					bFound = true;
+				}
+			}
+			this.getSession().update(operation);
+		}
 	}
 
 }

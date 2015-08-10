@@ -16,7 +16,7 @@
         
 <script type="text/javascript">
 	$(function(){
-		$("#OK").click(function(){
+		$("#ASSIGN").click(function(){
 		
 			var radio = $("input[name='operation']:checked");
 			if(radio.length == 0){
@@ -61,7 +61,7 @@
 					if(result[i].operation.length > 0){
 						var ops = "";
 						for(var j=0; j<result[i].operation.length; j++){
-							ops += result[i].operation[j].type + "[" + result[i].operation[j].id + "] @" + result[i].operation[j].startTime + "<br/>"
+							ops += "[" + result[i].operation[j].id + "]" + result[i].operation[j].type + " @" + result[i].operation[j].startTime + "<br/>"
 						}
 						row += "<td>"+ops+"</td>";
 					} else
@@ -137,7 +137,7 @@
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-sm-7"><!--MIDDLE content-->
+		<div class="col-sm-6"><!--MIDDLE content-->
 			<legend>操作列表</legend>
 			<table class="table table-striped table-bordered">
 				<tr>
@@ -169,7 +169,7 @@
 				</tr>-->
 			</table>
 		</div>
-		<div class="col-sm-5"><!--Sidebar content-->
+		<div class="col-sm-6"><!--Sidebar content-->
 			<form class="form-horizontal" onsubmit="return false;">
 				<fieldset>
 	        		<legend>客户端列表</legend>
@@ -182,7 +182,7 @@
 						</table>
 	        		</div>
 	        		<div class="form-actions">
-						<button class="btn btn-primary" type="submit" id="OK">分配操作</button>
+						<button class="btn btn-primary" type="submit" id="ASSIGN">分配操作</button>
 						<button class="btn">取消</button>
 					</div>
 				</fieldset>

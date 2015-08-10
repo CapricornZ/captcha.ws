@@ -1,0 +1,91 @@
+#set( $ContextPath = ${request.contextPath} )
+
+<script type="text/javascript" src="${ContextPath}/js/jquery/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="${ContextPath}/js/jquery/jquery.maskedinput.js"></script>
+<script type="text/javascript">
+	$(function(){
+
+		$("#startTimeInput").mask("9999-99-99 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
+		$("#expireTimeInput").mask("9999-99-99 99:99:99",{placeholder:"yyyy-mm-dd hh:MM:ss"});
+		
+		$("#MODIFY").click(function(){
+			var opsParam = {
+				id:$('#operationID').val(),
+				type:"LOGIN",
+				startTime:$('#startTimeInput').val(),
+				expireTime:$('#expireTimeInput').val(),
+				content:$('#jsonContent').val()
+			};
+			
+			$.ajax({
+			    url: '${ContextPath}/command/operation/LOGIN/' + $('#operationID').val() + '.do',
+    			type: 'PUT',
+    			data:JSON.stringify(opsParam),
+				contentType: 'application/json;charset=utf-8;',
+				dataType: 'json',
+    			success: function(result) {
+    				alert('succ');
+			    }
+			});
+		});
+	});
+</script>
+
+<form class="form-horizontal" onsubmit="return false;">
+	<legend>LOGIN</legend>
+	<fieldset>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="operationID">OperationID</label>
+			<div class="controls col-sm-10">
+				<input id="operationID" class="input-mini uneditable-input" disabled style="height:30px;" type="text" value="${operation.id}">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="startTimeInput">触发时间</label>
+			<div class="controls col-sm-10">
+				<div class="input-group">
+					<span class="input-group-addon">@</span>
+					<input id="startTimeInput" class="form-control" style="width:200px;height:30px;" type="text" placeholder="startTime" value="${operation.startTime}"></input>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="expireTimeInput">有效时间</label>
+			<div class="controls col-sm-10">
+				<div class="input-group">
+					<span class="input-group-addon">@</span>
+					<input id="expireTimeInput" class="form-control" style="width:200px;height:30px;" type="text" placeholder="startTime"  value="${operation.expireTime}"></input>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="jsonContent">jsonContent</label>
+			<div class="controls 10">
+				<textarea class="form-control" rows="8" style="width:300px;" id="jsonContent">${operation.content}</textarea>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="jsonContent">分配の客户端</label>
+			<div class="controls">
+				<table id="clients" class="table table-striped .table-bordered">
+					<tr>
+						<th>HOST/IP</th>
+						<th>更新时间</th>
+					</tr>
+					#foreach(${client} in ${operation.clients})
+					<tr>
+						<td>${client.ip}</td>
+						<td>${client.updateTime}</td>
+					</tr>
+					#end
+				</table>
+			</div>
+		</div>
+		<!--
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" id="MODIFY">保存修改</button>
+			<button class="btn">取消</button>
+		</div>
+		-->
+	</fieldset>
+</form>

@@ -9,12 +9,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.chapta.model.Client;
 import demo.chapta.service.IClientService;
 
-@RequestMapping(value = "/command")
+@RequestMapping(value = "/command/client")
 @Controller
 public class ClientController {
 	
@@ -25,13 +26,14 @@ public class ClientController {
 		this.clientService = clientServ;
 	}
 	
-	@RequestMapping(value = "/client/stastic.do",method=RequestMethod.GET)
+	@RequestMapping(value = "/stastic.do",method=RequestMethod.GET)
 	public String stastic(Model model){
+		
 		 model.addAttribute("CLIENTS", this.clientService.list());
 		 return "client/stastic";
 	}
 	
-	@RequestMapping(value = "/client/list.do",method=RequestMethod.GET)
+	@RequestMapping(value = "/list.do",method=RequestMethod.GET)
 	@ResponseBody
 	public List<Client> listClient(){
 		
@@ -39,14 +41,21 @@ public class ClientController {
 		return rtn;
 	}
 	
-	@RequestMapping(value = "/client/{HOST}/detail.do",method=RequestMethod.GET)
+	@RequestMapping(value = "/{HOST}/removeOps.do",method=RequestMethod.PUT)
+	@ResponseBody
+	public void removeOperation(@PathVariable("HOST")String host, @RequestParam("opsID")int operationID){
+		
+		this.clientService.removeOperation(host, operationID);
+	}
+	
+	@RequestMapping(value = "/{HOST}/detail.do",method=RequestMethod.GET)
 	public String detailClient(@PathVariable("HOST")String host, Model model){
 		
 		model.addAttribute("client", this.clientService.queryByIP(host));
 		return "client/detail";
 	}
 	
-	@RequestMapping(value = "/client/{host}/operation.do",method=RequestMethod.GET)
+	@RequestMapping(value = "/{host}/operation.do",method=RequestMethod.GET)
 	public String clientOperation(@PathVariable("host")String host, Model model){
 		
 		Client client = this.clientService.queryByIP(host);

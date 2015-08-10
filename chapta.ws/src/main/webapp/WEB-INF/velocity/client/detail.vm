@@ -1,3 +1,28 @@
+#set( $ContextPath = ${request.contextPath} )
+
+<script type="text/javascript">
+	$(function(){
+		$("button[toggle='REMOVE']").click(function(){
+			
+			var host = $(this).attr("host");
+			var opsID = $(this).attr("opsID");
+			
+			$.ajax({
+			    url : host + '/removeOps.do?opsID=' + opsID,
+    			type: 'PUT',
+				contentType: 'application/json;charset=utf-8;',
+				error: function(msg) { alert("error"); },
+				complete: function(msg) { console.log("complete"); },
+				success: function(msg) { 
+				
+					alert("操作成功");
+					console.log("complete");
+				}     
+			});
+		});
+	});
+</script>
+
 <form class="form-horizontal" onsubmit="return false;">
 	<fieldset>
 		<div class="control-group">
@@ -52,11 +77,12 @@
 		#foreach(${operation} in ${client.operation})
 		<div class="control-group">
 			<label class="control-label" for="startTimeInput">操作-${operation.id}</label>
-			<div class="controls">
+			<div class="controls form-inline">
 				<div class="input-group">
-					<span class="input-group-addon">${operation.type}</span>
-					<input id="startTimeInput" class="form-control input-xlarge" style="width:200px;height:30px;" type="text" placeholder="startTime" value="${operation.tips}"></input>
+					<span class="input-group-addon" style="width:50px;">${operation.type}</span>
+					<input id="startTimeInput" class="form-control" style="width:210px;height:30px;" type="text" placeholder="startTime" value="${operation.tips}"></input>
 				</div>
+				<button type="submit" class="btn btn-primary btn-sm" toggle="REMOVE" host="${client.ip}" opsID="${operation.id}">REMOVE</button>
 			</div>
 		</div>
 		#end

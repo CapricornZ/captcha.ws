@@ -99,8 +99,10 @@ public class OperationService extends Service implements IOperationService {
 		
 		if(operations.size() > 0){
 			Operation operation = (Operation)operations.get(0);
-			for(Client client : hosts)
-				operation.getClients().add(client);
+			for(Client client : hosts){
+				if(!operation.getClients().contains(client))
+					operation.getClients().add(client);
+			}
 			session.update(operation);
 		}
 	}

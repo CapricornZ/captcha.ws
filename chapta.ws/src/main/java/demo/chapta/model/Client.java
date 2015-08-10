@@ -15,6 +15,22 @@ public class Client {
 	private Date updateTime;
 	private Config config;
 	
+	@Override
+	public int hashCode() {
+		return 0;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj instanceof Client){
+			Client other = (Client)obj;
+			return other.ip.equals(this.ip);
+		}
+		return false;
+		
+	}
+	
 	public Client(){
 	}
 	

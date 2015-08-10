@@ -12,4 +12,6 @@ public interface IClientService {
 	Client queryByIP(String ip);
 	List<Client> list();
 	List<Client> listByIPs(String[] hosts);
+	
+	void removeOperation(String host, int OperationID);
 }

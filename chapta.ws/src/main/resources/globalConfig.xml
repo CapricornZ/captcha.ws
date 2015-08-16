@@ -18,9 +18,10 @@
 		<property name="orcConfigs">
 			<list>
 				<ref bean="PRICE"/>
-				<ref bean="TIPS"/>
-				<ref bean="TIPS.NO"/>
+				<ref bean="TIPS0"/>
+				<ref bean="TIPS1"/>
 				<ref bean="LOADING"/>
+				<ref bean="CAPTCHA"/>
 			</list>
 		</property>
 	</bean>
@@ -34,24 +35,52 @@
 		</property>
 	</bean>
 	
-	<bean id="TIPS" class="demo.chapta.controller.rest.OrcConfig">
-		<property name="width" value="${global.tips.width}"/>
-		<property name="height" value="${global.tips.height}"/>
-		<property name="offsetY" value="${global.tips.offsetY}"/>
-		<property name="offsetX">
-			<value>${global.tips.offsetX}</value>
+	<bean id="TIPS0" class="demo.chapta.controller.rest.OrcTipConfig">
+		<property name="configTip">
+			<bean class="demo.chapta.controller.rest.OrcConfig">
+				<property name="width" value="${global.tips.width}"/>
+				<property name="height" value="${global.tips.height}"/>
+				<property name="offsetY" value="${global.tips.offsetY}"/>
+				<property name="offsetX">
+					<value>${global.tips0.offsetX}</value>
+				</property>
+			</bean>
+		</property>
+		<property name="configNo">
+			<bean class="demo.chapta.controller.rest.OrcConfig">
+				<property name="width" value="${global.tips.no.width}"/>
+				<property name="height" value="${global.tips.no.height}"/>
+				<property name="offsetY" value="${global.tips.no.offsetY}"/>
+				<property name="offsetX">
+					<value>${global.tips.no0.offsetX}</value>
+				</property>
+			</bean>
 		</property>
 	</bean>
 	
-	<bean id="TIPS.NO" class="demo.chapta.controller.rest.OrcConfig">
-		<property name="width" value="${global.tips.no.width}"/>
-		<property name="height" value="${global.tips.no.height}"/>
-		<property name="offsetY" value="${global.tips.no.offsetY}"/>
-		<property name="offsetX">
-			<value>${global.tips.no.offsetX}</value>
+	<bean id="TIPS1" class="demo.chapta.controller.rest.OrcTipConfig">
+		<property name="configTip">
+			<bean class="demo.chapta.controller.rest.OrcConfig">
+				<property name="width" value="${global.tips.width}"/>
+				<property name="height" value="${global.tips.height}"/>
+				<property name="offsetY" value="${global.tips.offsetY}"/>
+				<property name="offsetX">
+					<value>${global.tips1.offsetX}</value>
+				</property>
+			</bean>
+		</property>
+		<property name="configNo">
+			<bean class="demo.chapta.controller.rest.OrcConfig">
+				<property name="width" value="${global.tips.no.width}"/>
+				<property name="height" value="${global.tips.no.height}"/>
+				<property name="offsetY" value="${global.tips.no.offsetY}"/>
+				<property name="offsetX">
+					<value>${global.tips.no1.offsetX}</value>
+				</property>
+			</bean>
 		</property>
 	</bean>
-	
+		
 	<bean id="LOADING" class="demo.chapta.controller.rest.OrcConfig">
 		<property name="width" value="${global.loading.width}"/>
 		<property name="height" value="${global.loading.height}"/>

@@ -70,6 +70,7 @@
 	<bean class="demo.chapta.controller.ClientController">
 		<property name="clientService" ref="clientService"/>
 	</bean>
+	
 	<bean class="demo.chapta.controller.OperationController">
 		<property name="clientService" ref="clientService"/>
 		<property name="operationService" ref="operationService"/>

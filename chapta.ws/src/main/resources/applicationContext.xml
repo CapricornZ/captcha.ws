@@ -24,28 +24,9 @@
     
 	<!-- 出价时候的验证码 -->
     <bean id="captchaConfig" class="demo.chapta.Config">
-    	
     	<property name="tmpPath" value="${tmpDirectory}"/>
     	<property name="dictPath" value="${captchaSubmit.dictDirectory}"/>
     	<property name="orcConfig" ref="CAPTCHA"/>
-    	
-    	<!--
-    	<property name="minNearSpots" value="${captchaSubmit.minNearSpots}"/>
-    	<property name="width" value="${captchaSubmit.width}"/>
-    	<property name="height" value="${captchaSubmit.height}"/>
-    	<property name="offsetY" value="${captchaSubmit.offsetY}"/>
-    	<property name="offsetX">
-    		<value>${captchaSubmit.offsetX}</value>
-    		<array>
-    			<value>5</value>
-    			<value>21</value>
-    			<value>37</value>
-    			<value>53</value>
-    			<value>69</value>
-    			<value>85</value>
-    		</array>
-    	</property>
-    	-->
     </bean>
     
     <bean id="priceConfig" class="demo.chapta.Config">

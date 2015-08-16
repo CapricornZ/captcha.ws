@@ -1,6 +1,6 @@
 package demo.chapta.controller.rest;
 
-public class OrcConfig {
+public class OrcConfig implements IOrcConfig {
 	
 	private int[] offsetX;
 	private int offsetY;
@@ -29,4 +29,9 @@ public class OrcConfig {
 	
 	public int getMinNearSpots() { return minNearSpots; }
 	public void setMinNearSpots(int minNearSpots) { this.minNearSpots = minNearSpots; }
+	
+	@Override
+	public String getCategory() {
+		return "OrcConfig";
+	}
 }

@@ -53,9 +53,28 @@ public class CommandController implements ApplicationContextAware {
 		return this.globalConfig;
 	}
 	
-	@RequestMapping(value = "/resource/{ID}/modify", method={RequestMethod.PUT})
+	@RequestMapping(value = "/resource/orc/tip/{ID}/modify", method={RequestMethod.PUT})
 	@ResponseBody
-	public void modifyResource(@RequestBody OrcConfig config, @PathVariable("ID")String id){
+	public void modifyTipConfig(@RequestBody OrcTipConfig config, @PathVariable("ID")String id){
+		
+		OrcTipConfig obj = (OrcTipConfig)this.context.getBean(id);
+		
+		obj.getConfigTip().setOffsetX(config.getConfigTip().getOffsetX());
+		obj.getConfigTip().setOffsetY(config.getConfigTip().getOffsetY());
+		obj.getConfigTip().setWidth(config.getConfigTip().getWidth());
+		obj.getConfigTip().setHeight(config.getConfigTip().getHeight());
+		obj.getConfigTip().setMinNearSpots(config.getConfigTip().getMinNearSpots());
+		
+		obj.getConfigNo().setOffsetX(config.getConfigNo().getOffsetX());
+		obj.getConfigNo().setOffsetY(config.getConfigNo().getOffsetY());
+		obj.getConfigNo().setWidth(config.getConfigNo().getWidth());
+		obj.getConfigNo().setHeight(config.getConfigNo().getHeight());
+		obj.getConfigNo().setMinNearSpots(config.getConfigNo().getMinNearSpots());
+	}
+	
+	@RequestMapping(value = "/resource/orc/{ID}/modify", method={RequestMethod.PUT})
+	@ResponseBody
+	public void modifyConfig(@RequestBody OrcConfig config, @PathVariable("ID")String id){
 		
 		OrcConfig obj = (OrcConfig)this.context.getBean(id);
 		
@@ -71,8 +90,8 @@ public class CommandController implements ApplicationContextAware {
 
 		model.addAttribute("TAG", this.globalConfig.getTag());
 		model.addAttribute("PRICE", this.context.getBean("PRICE"));
-		model.addAttribute("TIPS", this.context.getBean("TIPS"));
-		model.addAttribute("TIPSNO", this.context.getBean("TIPS.NO"));
+		model.addAttribute("TIPS0", this.context.getBean("TIPS0"));
+		model.addAttribute("TIPS1", this.context.getBean("TIPS1"));
 		model.addAttribute("LOADING", this.context.getBean("LOADING"));
 		model.addAttribute("CAPTCHA", this.context.getBean("CAPTCHA"));
 		model.addAttribute("LOGIN", this.context.getBean("LOGIN"));

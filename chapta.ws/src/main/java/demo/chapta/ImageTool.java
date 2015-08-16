@@ -1,10 +1,13 @@
 package demo.chapta;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,10 +22,57 @@ public class ImageTool {
     private BufferedImage image;
     private int width;
     private int height;
+    
+    public ImageTool(){}
+    public ImageTool(BufferedImage img){
+    	this.setImage(img);
+    }
 
+    /***
+     * 利用直方图找左上角起点
+     * @return
+     */
+    public Point findPoint(){
+    
+    	boolean bFound = false;
+    	int offsetX;
+    	for(offsetX=0; !bFound && offsetX < 20; offsetX++){
+    		
+    		List<Integer> rows = new ArrayList<Integer>();
+    		for(int x=0; x<15; x++){
+    			int black = 0;
+    			for(int y=0; y<this.image.getHeight(); y++)
+    				if(isBlack(new Color(this.image.getRGB(x+offsetX, y))))
+    					black++;
+    			rows.add(black);
+    		}
+    		
+    		if(rows.get(0) == 0 && rows.get(1) != 0 && rows.get(2) != 0 && rows.get(3) != 0)
+    			bFound = true;
+    		
+    		if(rows.get(0) == 0 && rows.get(1) == 0 && rows.get(2) == 0)
+    			bFound = (rows.get(12) == 0 && rows.get(13) == 0 && rows.get(14) == 0);
+    	}
+    	
+    	bFound = false;
+    	int offsetY = 0;
+    	for(int y=0; !bFound && y<this.image.getHeight(); y++){
+    		
+    		int black = 0;
+    		for(int x=0; x<15; x++)
+    			if(isBlack(new Color(this.image.getRGB(x+offsetX, y))))
+    				black++;
+    		if(black != 0){
+    			offsetY = y;
+    			bFound = true;
+    		}
+    	}
+    	
+    	return new Point(offsetX, offsetY);
+    }
+    
     /**
      * 变图像为黑白色 提示: 黑白化之前最好灰色化以便得到好的灰度平均值,利于获得好的黑白效果
-     *
      * @return
      */
     public ImageTool changeToBlackWhiteImage() {
@@ -39,6 +89,88 @@ public class ImageTool {
         return this;
     }
 
+    public ImageTool clearNoise(int dgGrayValue, int maxNearPoints){
+    	
+    	ImageTool rtn = new ImageTool();
+    	
+    	BufferedImage _image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
+    	Color[] points = new Color[8];
+    	int white = this.getWhitePoint();
+    	for(int x=0; x<this.width; x++)
+    		for(int y=0; y<this.height; y++){
+    			
+    			Color color = new Color(this.image.getRGB(x, y));
+    			if(color.getRed() < dgGrayValue){
+    				
+    				int nearDots = 0;
+    				if(x==0 || x==width-1 || y==0 || y==height-1)
+    					_image.setRGB(x, y, white);
+    				else{
+
+    					//points[0] = new Color(this.image.getRGB(x-1, y-1));
+    	    			//points[1] = new Color(this.image.getRGB(x, y-1));
+    	    			//points[2] = new Color(this.image.getRGB(x+1, y-1));
+    	    			//points[3] = new Color(this.image.getRGB(x-1, y));
+    	    			//points[4] = new Color(this.image.getRGB(x+1, y));
+    	    			//points[5] = new Color(this.image.getRGB(x-1, y+1));
+    	    			//points[6] = new Color(this.image.getRGB(x, y+1));
+    	    			//points[7] = new Color(this.image.getRGB(x+1, y+1));
+    					
+    	    			points[0] = new Color(this.image.getRGB(x, y-1));
+    	    			points[1] = new Color(this.image.getRGB(x-1, y));
+    	    			points[2] = new Color(this.image.getRGB(x+1, y));
+    	    			points[3] = new Color(this.image.getRGB(x, y+1));
+    	    			
+    	    			for(int i=0; i<4; i++)
+    	    				if(points[i].getRed() < dgGrayValue)
+    	    					nearDots ++ ;
+    				}
+
+    				if(nearDots < maxNearPoints)
+    					_image.setRGB(x, y, white);
+    			}
+    			else
+    				_image.setRGB(x, y, white);
+    		}
+    	
+    	rtn.setImage(_image);
+    	return rtn;
+    }
+    /***
+     * 3*3中值滤波
+     * @param dgGrayValue
+     * @return
+     */
+    public ImageTool clearNoise(int dgGrayValue){
+    	
+    	Color[] points = new Color[9];
+    	for(int y=1; y<this.height-1; y++){
+    		for(int x=1; x<this.width-1; x++){
+    			points[0] = new Color(this.image.getRGB(x-1, y-1));
+    			points[1] = new Color(this.image.getRGB(x, y-1));
+    			points[2] = new Color(this.image.getRGB(x+1, y-1));
+    			points[3] = new Color(this.image.getRGB(x-1, y));
+    			points[4] = new Color(this.image.getRGB(x, y));
+    			points[5] = new Color(this.image.getRGB(x+1, y));
+    			points[6] = new Color(this.image.getRGB(x-1, y+1));
+    			points[7] = new Color(this.image.getRGB(x, y+1));
+    			points[8] = new Color(this.image.getRGB(x+1, y+1));
+    			
+    			for(int j=0; j<5; j++)
+    				for(int i=j+1;i<9;i++){
+
+    					if(points[j].getRGB() < points[i].getRGB()){
+    						Color tmp = points[j];
+    						points[j] = points[i];
+    						points[i] = tmp;
+    					}
+    				}
+    			image.setRGB(x, y, new Color(points[4].getRed(), points[4].getRed(), points[4].getRed()).getRGB());
+    			//image.setRGB(x, y, points[4].getRGB());
+    		}
+    	}
+    	return this;
+    }
     /**
      *
      *
@@ -87,11 +219,33 @@ public class ImageTool {
             for (int j = 0; j < width; j++) {
                 
             	Color point = new Color(image.getRGB(j, i));
-                if(point.getRed()>155 && point.getRed()>point.getBlue() && point.getRed() > point.getGreen())
+                if(isRed(point))
                 	active++;
             }
         }
         return (int) Math.ceil(((float) active * 100 / (width * height)));
+    }
+    
+    private static boolean isRed(Color point){
+    	
+    	int g = point.getGreen();
+    	int r = point.getRed();
+    	int b = point.getBlue();
+    	return (r>=150 && r>=b && r>=g);
+    	//return (r>=145 && r>=b && r-g > 100);
+    }
+    
+    private static boolean isBlack(Color point){
+    	return point.getRed() == 0;
+    }
+    
+    private static boolean isGray(Color point){
+    	
+    	int g = point.getGreen();
+    	int r = point.getRed();
+    	int b = point.getBlue();
+    	
+    	return ((g-50<r && g+50>r) && (g-50<b && g+50>r) && r > 100);
     }
 
     private int getWhitePercent() {
@@ -222,7 +376,7 @@ public class ImageTool {
         return this;
     }
 
-    public BufferedImage getBufferedImage(InputStream is){
+    static public BufferedImage getBufferedImage(InputStream is){
     	try{
     		return ImageIO.read(is);
     	} catch (IOException ex){
@@ -231,7 +385,7 @@ public class ImageTool {
     	}
     }
     
-    public BufferedImage getBufferedImage(String filename) {
+    static public BufferedImage getBufferedImage(String filename) {
         File file = new File(filename);
         try {
             return ImageIO.read(file);
@@ -263,6 +417,34 @@ public class ImageTool {
         return counter == total && total != 0;
     }
     
+    public ImageTool holdActive(){
+    	
+    	int white = this.getWhitePoint();
+        Color point;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                point = new Color(image.getRGB(j, i));
+                if(!isGray(point) && !isRed(point))
+                	image.setRGB(j,i, white);
+            }
+        }
+        return this;
+    }
+    
+    public ImageTool holdGray(){
+    	
+    	int white = this.getWhitePoint();
+        Color point;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                point = new Color(image.getRGB(j, i));
+                if(!isGray(point))
+                	image.setRGB(j,i, white);
+            }
+        }
+        return this;
+    }
+    
     public ImageTool holdRed(){
     	
     	int white = this.getWhitePoint();
@@ -270,7 +452,7 @@ public class ImageTool {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 point = new Color(image.getRGB(j, i));
-                if(point.getRed()<155 || point.getRed()<point.getBlue() || point.getRed() < point.getGreen())
+                if(!isRed(point))
                 	image.setRGB(j,i, white);
             }
         }

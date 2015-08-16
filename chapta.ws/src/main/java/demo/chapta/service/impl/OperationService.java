@@ -65,7 +65,7 @@ public class OperationService extends Service implements IOperationService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Operation> listAll() {
-		Query query = this.getSession().createQuery("from Operation");
+		Query query = this.getSession().createQuery("from Operation order by id desc");
 		return query.list();
 	}
 

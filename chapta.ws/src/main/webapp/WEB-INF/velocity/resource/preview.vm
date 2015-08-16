@@ -31,6 +31,42 @@
 			});
 		});
 		
+		$("button[toggle='TIPS-MODIFY']").click(function(){
+		
+			var id = $(this).attr('name');
+			var containerTip = $('#'+id);
+			var containerNo = $('#'+id+'NO');
+			var configTip = {
+				'offsetX' : containerTip.find('#offsetX').val().split(","),
+				'offsetY' : containerTip.find('#offsetY').val(),
+				'width'   : containerTip.find('#width').val(),
+				'height'  : containerTip.find('#height').val()
+			};
+			var configNo = {
+				'offsetX' : containerNo.find('#offsetX').val().split(","),
+				'offsetY' : containerNo.find('#offsetY').val(),
+				'width'   : containerNo.find('#width').val(),
+				'height'  : containerNo.find('#height').val()
+			};
+			var config = {
+				'configTip' : configTip,
+				'configNo'  : configNo
+			};
+			
+			var endPoint = "${ContextPath}/command/resource/orc/tip/" + id + "/modify.do";
+			$.ajax({
+				url:endPoint,
+				type:'PUT',
+				cache:false,
+				data:JSON.stringify(config),
+				contentType: 'application/json; charset=utf-8',
+				success: function(json) {
+					alert("修改成功");
+					console.log("reponse :"+ json);
+                }
+			});
+		});
+		
 		$("button[toggle='GLOBAL']").click(function(){
 			var container = $(this).parents('.form-horizontal');
 			var id=container.attr("id");
@@ -41,7 +77,7 @@
 				'height'  : container.find('#height').val()
 			};
 			
-			var endPoint = "${ContextPath}/command/resource/" + id + "/modify.do";
+			var endPoint = "${ContextPath}/command/resource/orc/" + id + "/modify.do";
 			$.ajax({
 				url:endPoint,
 				type:'PUT',
@@ -59,7 +95,151 @@
 
 <div class="container-fluid">
 	<legend>预览全局配置 - ${TAG}版</legend>
-	<div class="row"><!--fluid-->
+	<div class="row"><!--fluid-->	
+		<div class="col-md-2"><!--Sidebar content-->
+			<div class="form-horizontal" id="TIPS0">
+				<legend><small>请输入第2位到第5位</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${TIPS0.configTip.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-4">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${TIPS0.configTip.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">宽*高</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${TIPS0.configTip.width}">
+    				</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${TIPS0.configTip.height}">
+    				</div>
+  				</div>
+  				<!--<div class="form-group">
+    				<label for="minNearSpots" class="col-sm-4 control-label">minNearSpot</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="minNearSpots" style="width:50px;" placeholder="width" value="${TIPS0.configTip.minNearSpots}">
+    				</div>
+  				</div>-->
+			</div>
+		</div>
+		
+		<div class="col-md-2"><!--Sidebar content-->
+			<div class="form-horizontal" id="TIPS0NO">
+				<legend><small>TIPS.NO</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${TIPS0.configNo.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-4">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${TIPS0.configNo.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">宽*高</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${TIPS0.configNo.width}">
+    				</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${TIPS0.configNo.height}">
+    				</div>
+  				</div>
+  				<!--<div class="form-group">
+    				<label for="minNearSpots" class="col-sm-4 control-label">minNearSpot</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="minNearSpots" style="width:50px;" placeholder="width" value="${TIPS0.configNo.minNearSpots}">
+    				</div>
+  				</div>-->
+				<div class="col-sm-offset-4 col-sm-10">
+					<button class="btn btn-primary" toggle="TIPS-MODIFY" name="TIPS0">修改</button>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-2">BLANK</div>
+		
+		<div class="col-md-2"><!--Sidebar content-->
+			<div class="form-horizontal" id="TIPS1">
+				<legend><small>TIPS：请输入前|后4位</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${TIPS1.configTip.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-4">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${TIPS1.configTip.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">宽*高</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${TIPS1.configTip.width}">
+    				</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${TIPS1.configTip.height}">
+    				</div>
+  				</div>
+  				<!--<div class="form-group">
+    				<label for="minNearSpots" class="col-sm-4 control-label">minNearSpot</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="minNearSpots" style="width:50px;" placeholder="width" value="${TIPS1.configTip.minNearSpots}">
+    				</div>
+  				</div>-->
+			</div>
+		</div>
+		
+		<div class="col-md-2">
+			<div class="form-horizontal" id="TIPS1NO">
+				<legend><small>TIPS.NO</small></legend>
+				<div class="form-group">
+    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
+    				<div class="col-sm-7">
+      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${TIPS1.configNo.offsetXText}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<div class="col-sm-4">
+      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${TIPS1.configNo.offsetY}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="offsetY" class="col-sm-4 control-label">宽*高</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${TIPS1.configNo.width}">
+    				</div>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${TIPS1.configNo.height}">
+    				</div>
+  				</div>
+  				<!--<div class="form-group">
+    				<label for="minNearSpots" class="col-sm-4 control-label">minNearSpot</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="minNearSpots" style="width:50px;" placeholder="width" value="${TIPS1.configNo.minNearSpots}">
+    				</div>
+  				</div>-->
+				<div class="col-sm-offset-4 col-sm-10">
+					<button class="btn btn-primary" toggle="TIPS-MODIFY" name="TIPS1">修改</button>
+				</div>
+			</div>
+		</div><!--Sidebar content-->
+		
+		<div class="col-md-2">BLANK</div>
+	</div><!--fluid-->
+	
+	<div class="row-fluid"><!--fluid-->
 		<div class="col-md-3"><!--Sidebar content-->
 			<div class="form-horizontal" id="PRICE">
 				<legend><small>PRICE:83300</small></legend>
@@ -83,6 +263,12 @@
     				<div class="col-sm-1">*</div>
     				<div class="col-sm-3">
       					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${PRICE.height}">
+    				</div>
+  				</div>
+  				<div class="form-group">
+    				<label for="minNearSpots" class="col-sm-4 control-label">minNearSpot</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="minNearSpots" style="width:50px;" placeholder="width" value="${PRICE.minNearSpots}">
     				</div>
   				</div>
 				<div class="col-sm-offset-4 col-sm-10">
@@ -115,35 +301,10 @@
       					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${LOADING.height}">
     				</div>
   				</div>
-				<div class="col-sm-offset-4 col-sm-10">
-					<button class="btn btn-primary" toggle="GLOBAL">修改</button>
-				</div>
-			</div>
-		</div>
-	
-		<div class="col-md-3"><!--Sidebar content-->
-			<div class="form-horizontal" id="TIPS">
-				<legend><small>TIPS：请输入前|请输入后|请输入第</small></legend>
-				<div class="form-group">
-    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
-    				<div class="col-sm-7">
-      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${TIPS.offsetXText}">
-    				</div>
-  				</div>
   				<div class="form-group">
-    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
+    				<label for="minNearSpots" class="col-sm-4 control-label">minNearSpot</label>
     				<div class="col-sm-3">
-      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${TIPS.offsetY}">
-    				</div>
-  				</div>
-  				<div class="form-group">
-    				<label for="offsetY" class="col-sm-4 control-label">width*height</label>
-    				<div class="col-sm-3">
-      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${TIPS.width}">
-    				</div>
-    				<div class="col-sm-1">*</div>
-    				<div class="col-sm-3">
-      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${TIPS.height}">
+      					<input type="text" class="form-control" id="minNearSpots" style="width:50px;" placeholder="width" value="${LOADING.minNearSpots}">
     				</div>
   				</div>
 				<div class="col-sm-offset-4 col-sm-10">
@@ -151,39 +312,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-3"><!--Sidebar content-->
-			<div class="form-horizontal" id="TIPS.NO">
-				<legend><small>TIPS.NO</small></legend>
-				<div class="form-group">
-    				<label for="offsetX" class="col-sm-4 control-label">offsetX</label>
-    				<div class="col-sm-7">
-      					<input type="text" class="form-control" id="offsetX" placeholder="offsetX" value="${TIPSNO.offsetXText}">
-    				</div>
-  				</div>
-  				<div class="form-group">
-    				<label for="offsetY" class="col-sm-4 control-label">offsetY</label>
-    				<div class="col-sm-3">
-      					<input type="text" class="form-control" id="offsetY" placeholder="offsetY" value="${TIPSNO.offsetY}">
-    				</div>
-  				</div>
-  				<div class="form-group">
-    				<label for="offsetY" class="col-sm-4 control-label">width*height</label>
-    				<div class="col-sm-3">
-      					<input type="text" class="form-control" id="width" style="width:50px;" placeholder="width" value="${TIPSNO.width}">
-    				</div>
-    				<div class="col-sm-1">*</div>
-    				<div class="col-sm-3">
-      					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${TIPSNO.height}">
-    				</div>
-  				</div>
-				<div class="col-sm-offset-4 col-sm-10">
-					<button class="btn btn-primary" toggle="GLOBAL">修改</button>
-				</div>
-			</div>
-		</div>
-	</div><!--fluid-->
-	
-	<div class="row-fluid"><!--fluid-->
+		<div class="col-md-3">BLANK</div><!--Sidebar content-->
 		<div class="col-md-3"><!--Sidebar content-->
 			<div class="form-horizontal" id="CAPTCHA">
 				<legend><small>CAPTCHA:678682</small></legend>
@@ -209,8 +338,14 @@
       					<input type="text" class="form-control" id="height" style="width:50px;" placeholder="height" value="${CAPTCHA.height}">
     				</div>
   				</div>
+  				<div class="form-group">
+    				<label for="minNearSpots" class="col-sm-4 control-label">minNearSpot</label>
+    				<div class="col-sm-3">
+      					<input type="text" class="form-control" id="minNearSpots" style="width:50px;" placeholder="width" value="${CAPTCHA.minNearSpots}">
+    				</div>
+  				</div>
 				<div class="col-sm-offset-4 col-sm-10">
-					<button class="btn btn-primary" toggle="GLOBAL">修改</button>
+					<button class="btn btn-primary" toggle="LOCAL">修改</button>
 				</div>
 			</div><!--form-horizontal-->
 		</div><!--Sidebar content-->

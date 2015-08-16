@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;  
 import java.util.HashMap;  
 import java.util.List;  
@@ -135,64 +136,13 @@ public class ImagePreProcess {
      * @throws Exception 
      */  
     public static void main(String[] args) throws Exception {
-
-    	Config config = Config.load();
     	
-    	ImageTool it = new ImageTool();
-    	BufferedImage bi = it.getBufferedImage(String.format("%s/captcha.jpg", args[0]));
-        it.setImage(bi);
-        it = it.changeToGrayImage();//灰度处理
-        it = it.changeToBlackWhiteImage();//黑白
-        it = it.removeBadBlock(1, 1, config.getMinNearSpots());//去噪
-        it.saveToFile(String.format("%s/temp.jpg", args[0]));
-        
-        BufferedImage img = it.getImage();
-        Map<BufferedImage, String> map = load(args[1]);
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i<config.getOffsetX().length; i++){
-        	
-        	BufferedImage item = img.getSubimage(config.getOffsetX()[i], config.getOffsetY(),
-        			config.getWidth(), config.getHeight());
-            String s = getSingleCharOcr(item, map);
-            sb.append(s);
-        }
-        System.out.println(sb.toString());
-        
-        FileOutputStream fo = new FileOutputStream(String.format("%s/captcha.txt", args[0]));
-        fo.write(sb.toString().getBytes());
-        fo.close();
-        
-        /*BufferedImage img = ImageIO.read(new File("/home/martin/xxx-0.jpg"));
-        ImageIO.write(img.getSubimage(2, 4, 15, 20), "JPG", new File("/home/martin/x0.jpg"));
-        ImageIO.write(img.getSubimage(18, 4, 15, 20), "JPG", new File("/home/martin/x1.jpg"));
-        ImageIO.write(img.getSubimage(36, 4, 15, 20), "JPG", new File("/home/martin/x2.jpg"));
-        ImageIO.write(img.getSubimage(54, 4, 15, 20), "JPG", new File("/home/martin/x3.jpg"));
-        ImageIO.write(img.getSubimage(72, 4, 15, 20), "JPG", new File("/home/martin/x4.jpg"));
-        ImageIO.write(img.getSubimage(90, 4, 15, 20), "JPG", new File("/home/martin/x5.jpg"));
-        
-        Map<BufferedImage, String> map = load();
-        String s = getSingleCharOcr(img.getSubimage(2, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(18, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(36, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(54, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(72, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(90, 4, 15, 20), map);System.out.print(s);*/
-    	
-    	/*BufferedImage img = ImageIO.read(new File("/home/martin/xxx.jpg"));
-        ImageIO.write(img.getSubimage(2, 4, 15, 20), "JPG", new File("/home/martin/x0.jpg"));
-        ImageIO.write(img.getSubimage(21, 4, 15, 20), "JPG", new File("/home/martin/x1.jpg"));
-        ImageIO.write(img.getSubimage(41, 4, 15, 20), "JPG", new File("/home/martin/x2.jpg"));
-        ImageIO.write(img.getSubimage(60, 4, 15, 20), "JPG", new File("/home/martin/x3.jpg"));
-        ImageIO.write(img.getSubimage(78, 4, 15, 20), "JPG", new File("/home/martin/x4.jpg"));
-        ImageIO.write(img.getSubimage(98, 4, 15, 20), "JPG", new File("/home/martin/x5.jpg"));
-        
-        Map<BufferedImage, String> map = load();
-        String s = getSingleCharOcr(img.getSubimage(2, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(21, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(41, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(60, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(78, 4, 15, 20), map);System.out.print(s);
-        s = getSingleCharOcr(img.getSubimage(98, 4, 15, 20), map);System.out.print(s);*/
+		ImageTool it = new ImageTool();
+		it.setImage(ImageIO.read(new File("/home/martin/tmp/1439455106501/captchaBefore.bmp")));
+		it.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, 4);
+		java.awt.Point init = it.findPoint();
+		System.out.println(init.getX());
+		System.out.println(init.getY());
     }
     
     public static Map<BufferedImage, String> load(String directory) throws Exception {

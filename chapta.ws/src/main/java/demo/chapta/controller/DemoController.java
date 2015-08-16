@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import demo.chapta.Config;
+import demo.chapta.EhOrc;
+import demo.chapta.IOrc;
 import demo.chapta.ImageTool;
+import demo.chapta.Orc;
 
 @RequestMapping(value = "/receive")
 @Controller
@@ -74,7 +78,7 @@ public class DemoController {
 			dir.mkdir();
 
 			ImageTool it = new ImageTool();
-			it.setImage(it.getBufferedImage(file.getInputStream()));
+			it.setImage(ImageTool.getBufferedImage(file.getInputStream()));
 			it.saveToFile(strDir + "/before.bmp");
 	        it = it.midddleValueFilter(20, true).holdRed();//中值过滤//保留红色和白色背景
 	        it.saveToFile(strDir + "/after.bmp");
@@ -87,9 +91,9 @@ public class DemoController {
 	        	BufferedImage subImg = img.getSubimage(captchaConfig.getOffsetX()[i], captchaConfig.getOffsetY(),
 	        			captchaConfig.getWidth(), captchaConfig.getHeight());
 	        	itx.setImage(subImg);
-	        	int redPercent = itx.getActivePercent();
-	        	
+	        	int redPercent = itx.getActivePercent();	        	
 	        	itx = itx.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, captchaConfig.getMinNearSpots());//灰度处理//黑白//去噪
+	        	itx.saveToFile(String.format("%s/%d.bmp", strDir, i));
 	            String s = getSingleCharOcr(subImg, captchaConfig.getDict());
 	            
 	            list.add(new Element(i, redPercent, s));
@@ -138,13 +142,51 @@ public class DemoController {
 		logger.debug("accept process detail Captcha : binary stream");
 		StringBuilder sb = new StringBuilder();
 		try{
+
+			//文字识别
+			IOrc orc = Orc.getInstance(this.captchaConfig);
+			BufferedImage image = ImageTool.getBufferedImage(file.getInputStream());
+			sb.append(orc.scanStringFromPic(image, 0, 0));
+			
+			//获取字图片
+			for(int i=0; i<orc.getSubImages().length; i++){
+				
+				java.io.ByteArrayOutputStream arrayOS = new java.io.ByteArrayOutputStream();
+	        	ImageIO.write(orc.getSubImages()[i], "JPG", arrayOS);
+	        	rtn.add(new String(Base64.encodeBase64(arrayOS.toByteArray())));//BASE64 Encode
+			}
+			
+		} catch (IOException ex){
+			
+			ex.printStackTrace();
+			return (String[])rtn.toArray();
+		}
+		
+		long end = new java.util.Date().getTime();
+		logger.info("CAPTCHA:[{}], cost {}ms", sb.toString(), end-start);
+		logger.debug("end process detail Captcha");
+		
+		String[] result;
+		rtn.add(sb.toString());
+		result = rtn.toArray(new String[0]); 
+		return result;
+	}
+	/*@RequestMapping(value = "/captcha/detail.do")
+	@ResponseBody
+	public String[] detailCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
+		
+		List<String> rtn = new ArrayList<String>();
+		long start = new java.util.Date().getTime();
+		logger.debug("accept process detail Captcha : binary stream");
+		StringBuilder sb = new StringBuilder();
+		try{
 			
 			String strDir = this.captchaConfig.getTmpPath();
 			ImageTool it = new ImageTool();
 	    	BufferedImage bi = it.getBufferedImage(file.getInputStream());
 	    	it.setImage(bi);
 	    	it.saveToFile(strDir + "/captchaBefore.bmp");
-	        it = it.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, this.captchaConfig.getMinNearSpots());//灰度处理,黑白,去噪
+	    	it = it.changeToGrayImage().changeToBlackWhiteImage();//灰度处理,黑白,去噪
 	        it.saveToFile(strDir + "/captchaAfter.bmp");
 	        
 	        BufferedImage img = it.getImage();
@@ -152,6 +194,11 @@ public class DemoController {
 	        	
 	        	BufferedImage item = img.getSubimage(captchaConfig.getOffsetX()[i], captchaConfig.getOffsetY(),
 	        			captchaConfig.getWidth(), captchaConfig.getHeight());
+	        	ImageTool subIt = new ImageTool();
+	        	subIt.setImage(item);
+	        	subIt = subIt.removeBadBlock(1, 1, this.captchaConfig.getMinNearSpots());
+	        	item = subIt.getImage();
+	        	
 	        	java.io.ByteArrayOutputStream arrayOS = new java.io.ByteArrayOutputStream();
 	        	ImageIO.write(item, "JPG", arrayOS);
 	        	rtn.add(new String(org.apache.commons.codec.binary.Base64.encodeBase64(arrayOS.toByteArray())));
@@ -173,6 +220,72 @@ public class DemoController {
 		rtn.add(sb.toString());
 		result = rtn.toArray(new String[0]); 
 		return result;
+	}*/
+	
+	@RequestMapping(value = "/dynamic/captcha/detail.do")
+	@ResponseBody
+	public String[] detailDynamicCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
+		
+		List<String> rtn = new ArrayList<String>();
+		long start = new java.util.Date().getTime();
+		logger.debug("accept process detail Captcha : binary stream");
+		StringBuilder sb = new StringBuilder();
+		try{
+
+			//文字识别
+			IOrc orc = Orc.getInstance(this.captchaConfig);
+			EhOrc enhanceOrc = new EhOrc(this.captchaConfig, orc);
+			BufferedImage image = ImageTool.getBufferedImage(file.getInputStream());
+			sb.append(enhanceOrc.scanStringFromPic(image, 0, 0));
+			
+			//获取字图片
+			for(int i=0; i<orc.getSubImages().length; i++){
+				
+				java.io.ByteArrayOutputStream arrayOS = new java.io.ByteArrayOutputStream();
+	        	ImageIO.write(orc.getSubImages()[i], "JPG", arrayOS);
+	        	rtn.add(new String(Base64.encodeBase64(arrayOS.toByteArray())));//BASE64 Encode
+			}
+			
+		} catch (IOException ex){
+			
+			ex.printStackTrace();
+			return (String[])rtn.toArray();
+		}
+		
+		long end = new java.util.Date().getTime();
+		logger.info("CAPTCHA:[{}], cost {}ms", sb.toString(), end-start);
+		logger.debug("end process detail Captcha");
+		
+		String[] result;
+		rtn.add(sb.toString());
+		result = rtn.toArray(new String[0]); 
+		return result;
+	}
+	
+	@RequestMapping(value = "/dynamic/captcha.do")
+	@ResponseBody
+	public String acceptDynamicCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
+		
+		long start = new java.util.Date().getTime();
+		logger.debug("accept process Captcha : binary stream");
+		StringBuilder sb = new StringBuilder();
+		try{
+			
+			BufferedImage image = ImageTool.getBufferedImage(file.getInputStream());
+			IOrc orc = Orc.getInstance(this.captchaConfig);
+			EhOrc enhanceOrc = new EhOrc(this.captchaConfig, orc);
+			sb.append(enhanceOrc.scanStringFromPic(image, "/" + new Date().getTime(), 0, 0));
+			
+		} catch (IOException ex){
+			
+			ex.printStackTrace();
+			return "++++++";
+		}
+		
+		long end = new java.util.Date().getTime();
+		logger.info("CAPTCHA:[{}], cost : {}ms", sb.toString(), end-start);
+		logger.debug("end process Captcha");
+		return sb.toString();
 	}
 	
 	/***
@@ -190,6 +303,27 @@ public class DemoController {
 		logger.debug("accept process Captcha : binary stream");
 		StringBuilder sb = new StringBuilder();
 		try{
+			
+			BufferedImage image = ImageTool.getBufferedImage(file.getInputStream());
+			IOrc orc = Orc.getInstance(this.captchaConfig);
+			sb.append(orc.scanStringFromPic(image, "/" + new Date().getTime(), 0, 0));
+		} catch (IOException ex){
+			
+			ex.printStackTrace();
+			return "++++++";
+		}
+		
+		long end = new java.util.Date().getTime();
+		logger.info("CAPTCHA:[{}], cost {}ms", sb.toString(), end-start);
+		logger.debug("end process Captcha");
+		return sb.toString();
+	}
+	/*public String acceptCaptcha(@RequestParam(value = "file", required = true) MultipartFile file) {
+		
+		long start = new java.util.Date().getTime();
+		logger.debug("accept process Captcha : binary stream");
+		StringBuilder sb = new StringBuilder();
+		try{
 			String strDir = this.captchaConfig.getTmpPath() + "/" + new Date().getTime();
 			File dir = new File(strDir);
 			dir.mkdir();
@@ -198,7 +332,7 @@ public class DemoController {
 	    	BufferedImage bi = it.getBufferedImage(file.getInputStream());
 	    	it.setImage(bi);
 	    	it.saveToFile(strDir + "/captchaBefore.bmp");
-	        it = it.changeToGrayImage().changeToBlackWhiteImage().removeBadBlock(1, 1, captchaConfig.getMinNearSpots());//灰度处理,黑白,去噪
+	    	it = it.changeToGrayImage().changeToBlackWhiteImage();//
 	        it.saveToFile(strDir + "/captchaAfter.bmp");
 	        
 	        BufferedImage img = it.getImage();
@@ -206,6 +340,10 @@ public class DemoController {
 	        	
 	        	BufferedImage item = img.getSubimage(captchaConfig.getOffsetX()[i], captchaConfig.getOffsetY(),
 	        			captchaConfig.getWidth(), captchaConfig.getHeight());
+	        	ImageTool itSub = new ImageTool();
+	        	itSub.setImage(item);
+	        	itSub = itSub.removeBadBlock(1, 1, captchaConfig.getMinNearSpots());//灰度处理,黑白,去噪
+	        	item = itSub.getImage();
 	            String s = getSingleCharOcr(item, captchaConfig.getDict());
 	            sb.append(s);
 	        }
@@ -220,41 +358,7 @@ public class DemoController {
 		logger.info("CAPTCHA:[{}]", sb.toString());
 		logger.debug("end process Captcha : cost {}ms", end-start);
 		return sb.toString();
-	}
-	
-	@RequestMapping(value = "/price.do")
-	@ResponseBody
-	public String acceptPrice(@RequestParam(value = "file", required = true) MultipartFile file){
-		
-		StringBuilder sb = new StringBuilder();
-		try{
-			
-			ImageTool it = new ImageTool();
-	    	BufferedImage bi = it.getBufferedImage(file.getInputStream());
-	    	it.setImage(bi);
-	    	it.saveToFile(this.priceConfig.getTmpPath() + "/priceBefore.bmp");
-	        it = it.changeToGrayImage();//灰度处理
-	        it = it.changeToBlackWhiteImage();//黑白
-	        it = it.removeBadBlock(1, 1, priceConfig.getMinNearSpots());//去噪
-	        it.saveToFile(this.priceConfig.getTmpPath() + "/priceAfter.bmp");
-	        
-	        BufferedImage img = it.getImage();
-	        for(int i=0; i<priceConfig.getOffsetX().length; i++){
-	        	
-	        	BufferedImage item = img.getSubimage(priceConfig.getOffsetX()[i], priceConfig.getOffsetY(),
-	        			priceConfig.getWidth(), priceConfig.getHeight());
-	        	ImageIO.write(item, "JPG", new File(String.format(this.priceConfig.getTmpPath() + "/price-item-%d.jpg", i)));
-	            String s = getSingleCharOcr(item, priceConfig.getDict());
-	            sb.append(s);
-	        }
-	        //System.out.println("Price : " + sb.toString());
-			
-		} catch (IOException ex){
-			return "++++++";
-		}
-		
-		return sb.toString();
-	}
+	}*/
 	
 	private static String getSingleCharOcr(BufferedImage img,  
             Map<BufferedImage, String> map) {  
